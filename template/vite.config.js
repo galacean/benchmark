@@ -1,7 +1,8 @@
 const path = require("path");
 const fs = require("fs-extra");
-const OUT_PATH = "mpa";
 const templateStr = fs.readFileSync(path.join(__dirname, "iframe.ejs"), "utf8");
+const platform = process.argv[process.argv.length - 1]; // galacean、three
+const OUT_PATH = `mpa`;
 
 // 替换 ejs 模版格式的字符串，如 <%= title %>: templateStr.replaceEJS("title","replaced title");
 String.prototype.replaceEJS = function (regStr, replaceStr) {
@@ -13,10 +14,10 @@ fs.emptyDirSync(path.resolve(__dirname, OUT_PATH));
 
 // create mpa
 const demoList = fs
-  .readdirSync(path.join(__dirname, "../src"))
+  .readdirSync(path.join(__dirname, "../src", platform))
   .filter((name) => /.ts$/.test(name))
   .map((name) => {
-    const content = fs.readFileSync(path.join(__dirname, "../src", name), "utf8");
+    const content = fs.readFileSync(path.join(__dirname, "../src", platform, name), "utf8");
     const title = /@title\s+(.+)\b/.exec(content);
     const category = /@category\s+(.+)\b/.exec(content);
 
@@ -34,7 +35,7 @@ const demoList = fs
 demoList.forEach(({ title, file }) => {
   const ejs = templateStr.replaceEJS("title", title).replaceEJS("url", `./${file}.ts`);
 
-  fs.outputFileSync(path.resolve(__dirname, OUT_PATH, file + ".ts"), `import "../../src/${file}"`);
+  fs.outputFileSync(path.resolve(__dirname, OUT_PATH, file + ".ts"), `import "../../src/${platform}/${file}"`);
   fs.outputFileSync(path.resolve(__dirname, OUT_PATH, file + ".html"), ejs);
 });
 
