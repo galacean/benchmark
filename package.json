@@ -14,9 +14,7 @@
   },
   "scripts": {
     "galacean": "vite serve template --config template/vite.config.js galacean",
-    "three": "vite serve template --config template/vite.config.js three",
-    "build": "vite build",
-    "deploy": "gh-pages -d dist"
+    "three": "vite serve template --config template/vite.config.js three"
   },
   "eslintConfig": {
     "extends": [
