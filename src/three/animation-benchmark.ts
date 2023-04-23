@@ -23,12 +23,6 @@ var ambientLight = new THREE.AmbientLight(0xffffff);
 ambientLight.color.set(new THREE.Color(1, 1, 1));
 scene.add(ambientLight);
 
-// var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-// directionalLight.intensity = 0.6;
-// directionalLight.position.set(0, 0, 1);
-// directionalLight.rotateZ(90);
-// scene.add(directionalLight);
-
 // 创建一个TextureLoader对象
 const textureLoader = new THREE.TextureLoader();
 
@@ -95,8 +89,8 @@ document.body.appendChild(stats.dom);
 const clock = new THREE.Clock();
 function animation(time) {
   var delta = clock.getDelta();
-  for (let mixer of mixers) {
-    mixer.update(delta);
+  for (let i = 0; i < mixers.length; i++) {
+    mixers[i].update(delta);
   }
   renderer.render(scene, camera);
   stats.update();
