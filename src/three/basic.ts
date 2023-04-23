@@ -17,10 +17,9 @@ const material = new THREE.MeshNormalMaterial();
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("canvas"), antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animation);
-document.body.appendChild(renderer.domElement);
 
 // animation
 
@@ -29,4 +28,6 @@ function animation(time) {
   mesh.rotation.y = time / 1000;
 
   renderer.render(scene, camera);
+  requestAnimationFrame(animation);
 }
+requestAnimationFrame(animation);
