@@ -6,7 +6,7 @@
 import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils";
 
 const camera = new THREE.PerspectiveCamera(
   45,
@@ -50,7 +50,7 @@ textureLoader.load(
 
         for (let i = 0; i < 30; i++) {
           for (let j = 0; j < 18; j++) {
-            const cloneModel = SkeletonUtils.clone(model);
+            const cloneModel = clone(model);
             cloneModel.position.set(i * 1.0 - 15.0, j * 1.2, -j * 3.5);
             cloneModel.scale.set(0.5, 0.5, 0.5);
 
