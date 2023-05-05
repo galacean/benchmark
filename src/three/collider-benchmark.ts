@@ -83,70 +83,34 @@ async function init() {
 
     physics.addMesh( boxes, 1 );
 
-    // Spheres
-
-    const geometrySphere = new THREE.IcosahedronGeometry( 0.05, 4 );
-    spheres = new THREE.InstancedMesh( geometrySphere, material, 400 );
-    spheres.instanceMatrix.setUsage( THREE.DynamicDrawUsage ); // will be updated every frame
-    spheres.castShadow = true;
-    spheres.receiveShadow = true;
-    scene.add( spheres );
-
-    for ( let i = 0; i < spheres.count; i ++ ) {
-
-        matrix.setPosition( Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5 );
-        spheres.setMatrixAt( i, matrix );
-        spheres.setColorAt( i, color.setHex( 0xffffff * Math.random() ) );
-
-    }
-
-    physics.addMesh( spheres, 1 );
-
     //
+    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    canvas.width = canvas.clientWidth * window.devicePixelRatio;
+    canvas.height = canvas.clientHeight * window.devicePixelRatio;
 
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.shadowMap.enabled = true;
-    document.body.appendChild( renderer.domElement );
+    renderer = new THREE.WebGLRenderer( {   
+        canvas: canvas,
+        antialias: true, 
+    } );
+    renderer.shadowMap.enabled = false;
 
     stats = new Stats();
     document.body.appendChild( stats.dom );
 
     //
-
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.target.y = 0.5;
     controls.update();
 
     animate();
-
-    setInterval( () => {
-
-        let index = Math.floor( Math.random() * boxes.count );
-
-        position.set( 0, Math.random() + 1, 0 );
-        physics.setMeshPosition( boxes, position, index );
-
-        //
-
-        index = Math.floor( Math.random() * spheres.count );
-
-        position.set( 0, Math.random() + 1, 0 );
-        physics.setMeshPosition( spheres, position, index );
-
-    }, 1000 / 60 );
-
 }
 
 function animate() {
-
     requestAnimationFrame( animate );
 
     renderer.render( scene, camera );
 
     stats.update();
-
 }
 
 });
