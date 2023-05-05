@@ -52,6 +52,10 @@ demoList.forEach(({ title, category, file }) => {
 });
 
 fs.outputJSONSync(path.join(__dirname, OUT_PATH, ".demoList.json"), demoSorted);
+const publicDir = path.join(__dirname, "../src", platform, "public");
+if (fs.existsSync(publicDir)) {
+  fs.copySync(publicDir, path.resolve(__dirname, OUT_PATH, "public"));
+}
 
 module.exports = {
   server: {
