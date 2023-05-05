@@ -12,7 +12,6 @@
     "@galacean/tools-baker": "^1.0.0-beta",
     "@types/three": "^0.150.2",
     "dat.gui": "^0.7.9",
-    "stats-js": "^1.0.1",
     "stats.js": "^0.17.0",
     "three": "^0.151.3"
   },
