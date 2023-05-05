@@ -7,6 +7,7 @@
     "@galacean/engine-physics-lite": "^1.0.0-beta",
     "@galacean/engine-physics-physx": "^1.0.0-beta",
     "@galacean/engine-toolkit": "^1.0.0-beta",
+    "@galacean/engine-toolkit-controls": "1.0.0-beta.1",
     "@galacean/engine-toolkit-stats": "^0.9.0",
     "@galacean/tools-baker": "^1.0.0-beta",
     "@types/three": "^0.150.2",
