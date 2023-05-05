@@ -44,15 +44,30 @@ import {
       new Quaternion()
     );
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 550; i++) {
+    // for (let i = 0; i < 550; i++) {
+    //   addBox(
+    //       rootEntity,
+    //       new Vector3(0.075, 0.075, 0.075),
+    //       new Vector3(Math.random() - 0.5, Math.random() * 2 + 2.5, Math.random() - 0.5),
+    //       quat
+    //     );
+    // }
+
+    var boxCount = 0;
+    setInterval(() => {
+      if (boxCount > 700) return;
+      
       addBox(
-          rootEntity,
-          new Vector3(0.075, 0.075, 0.075),
-          new Vector3(Math.random() - 0.5, Math.random() * 2 + 2.5, Math.random() - 0.5),
-          quat
-        );
-    }
+        rootEntity,
+        new Vector3(0.075, 0.075, 0.075),
+        new Vector3(Math.random() - 0.5, Math.random() * 2 + 2.5, Math.random() - 0.5),
+        quat
+      );
+      boxCount++;
+    }, 16);
   }
+
+
   
   function addPlane(
     rootEntity: Entity,
