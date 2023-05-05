@@ -21,8 +21,6 @@ scriptPromise.then(() => {
 let camera, scene, renderer, stats;
 let physics, position;
 
-let boxes, spheres;
-
 init();
 
 async function init() {
@@ -30,7 +28,6 @@ async function init() {
     position = new THREE.Vector3();
 
     //
-
     camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 );
     camera.position.set( - 1, 1.5, 2 );
     camera.lookAt( 0, 0.5, 0 );
@@ -53,35 +50,22 @@ async function init() {
         new THREE.ShadowMaterial( { color: 0x444444 } )
     );
     floor.position.y = - 2.5;
-    floor.receiveShadow = true;
+    floor.receiveShadow = false;
     scene.add( floor );
     physics.addMesh( floor );
 
-    //
-
-    const material = new THREE.MeshLambertMaterial();
-
-    const matrix = new THREE.Matrix4();
-    const color = new THREE.Color();
-
     // Boxes
-
     const geometryBox = new THREE.BoxGeometry( 0.075, 0.075, 0.075 );
-    boxes = new THREE.InstancedMesh( geometryBox, material, 400 );
-    boxes.instanceMatrix.setUsage( THREE.DynamicDrawUsage ); // will be updated every frame
-    boxes.castShadow = true;
-    boxes.receiveShadow = true;
-    scene.add( boxes );
+    for ( let i = 0; i < 550; i ++ ) {
+        let boxes = new THREE.Mesh( geometryBox, new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random() } ) );
+        boxes.castShadow = false;
+        boxes.receiveShadow = false;
+        scene.add( boxes );
 
-    for ( let i = 0; i < boxes.count; i ++ ) {
-
-        matrix.setPosition( Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5 );
-        boxes.setMatrixAt( i, matrix );
-        boxes.setColorAt( i, color.setHex( 0xffffff * Math.random() ) );
-
+        boxes.position.set( Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5 );
+        physics.addMesh( boxes, 1 );
     }
 
-    physics.addMesh( boxes, 1 );
 
     //
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");

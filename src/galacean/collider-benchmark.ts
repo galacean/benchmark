@@ -36,8 +36,7 @@ import {
   
   // init scene
   function init(rootEntity: Entity) {
-    const quat = new Quaternion(0, 0, 0.3, 0.7);
-    quat.normalize();
+    const quat = new Quaternion();
     addPlane(
       rootEntity,
       new Vector3(30, 0.0, 30),
@@ -45,16 +44,13 @@ import {
       new Quaternion()
     );
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 40; i++) {
-      // eslint-disable-next-line no-plusplus
-      for (let j = 0; j < 40; j++) {
-        addBox(
-            rootEntity,
-            new Vector3(1, 1, 1),
-            new Vector3(-20 + i, Math.floor(Math.random() * 6) + 1, -20 + j),
-            quat
-          );
-      }
+    for (let i = 0; i < 550; i++) {
+      addBox(
+          rootEntity,
+          new Vector3(0.075, 0.075, 0.075),
+          new Vector3(Math.random() - 0.5, Math.random() * 2 + 2.5, Math.random() - 0.5),
+          quat
+        );
     }
   }
   
@@ -139,18 +135,10 @@ import {
     const cameraEntity = rootEntity.createChild("camera");
     cameraEntity.addComponent(Camera);
     const pos = cameraEntity.transform.position;
-    pos.set(20, 20, 20);
+    pos.set(-1, 1.5, 2);
     cameraEntity.transform.lookAt(new Vector3());
     cameraEntity.addComponent(OrbitControl);
     cameraEntity.addComponent(Stats);
-
-    const entity = cameraEntity.createChild("text");
-    entity.transform.position = new Vector3(0, 3.5, -10);
-    const renderer = entity.addComponent(TextRenderer);
-    renderer.color = new Color();
-    renderer.text = "Use mouse to click the entity";
-    renderer.font = Font.createFromOS(entity.engine, "Arial");
-    renderer.fontSize = 40;
   
     // init directional light
     const light = rootEntity.createChild("light");
