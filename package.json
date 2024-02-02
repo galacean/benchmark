@@ -11,13 +11,15 @@
     "@galacean/engine-toolkit-stats": "^0.9.0",
     "@galacean/tools-baker": "^1.0.0-beta",
     "@types/three": "^0.150.2",
+    "babylonjs": "^6.41.0",
     "dat.gui": "^0.7.9",
     "stats.js": "^0.17.0",
     "three": "^0.151.3"
   },
   "scripts": {
     "galacean": "vite serve template --config template/vite.config.js galacean",
-    "three": "vite serve template --config template/vite.config.js three"
+    "three": "vite serve template --config template/vite.config.js three",
+    "babylon": "vite serve template --config template/vite.config.js babylon"
   },
   "eslintConfig": {
     "extends": [
