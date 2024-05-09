@@ -29,8 +29,8 @@ import {
     Vector3,
     WebGLEngine,
   } from "@galacean/engine";
-  import { OrbitControl } from "@galacean/engine-toolkit-controls";
-  import { Stats } from "@galacean/engine-toolkit-stats";
+  import { OrbitControl } from "@galacean/engine-toolkit";
+  import { Stats } from "@galacean/engine-toolkit";
 
   import { PhysXPhysics } from "@galacean/engine-physics-physx";
   

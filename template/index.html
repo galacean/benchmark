@@ -1,32 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galacean playground</title>
-  </head>
 
-  <body>
-    <div class="container">
-      <div class="header">
-      </div>
-      <input
-        placeholder="search..."
-        class="search-bar"
-        id="searchBar"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-      />
-      <div class="nav-left">
-        <div class="item-list" id="itemList"></div>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galacean playground</title>
+  <style>
+    .button-container {
+      position: absolute;
+      width: 100%;
+      bottom: 15px;
+      display: flex;
+      justify-content: center;
+    }
 
-      <div class="nav-right">
-        <iframe id="iframe" allowfullscreen src="" frameborder="0"></iframe>
-      </div>
+    .button {
+      width: 80px;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      /* text-align: center; */
+      text-decoration: none;
+      /* display: inline-block; */
+      box-sizing: border-box;
+      /* font-size: 16px; */
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+      box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+    </div>
+    <input placeholder="search..." class="search-bar" id="searchBar" autocorrect="off" autocapitalize="off"
+      spellcheck="false" />
+    <div class="nav-left">
+      <div class="item-list" id="itemList"></div>
     </div>
 
-    <script type="module" src="./index.js"></script>
-  </body>
+    <div class="nav-right">
+      <iframe id="iframe" allowfullscreen src="" frameborder="0"></iframe>
+      <div class="button-container">
+        <div>
+          <button id="button1" class="button">Click Me!</button>
+          <button id="button2" class="button">Click Me!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./index.js"></script>
+</body>
+
 </html>
