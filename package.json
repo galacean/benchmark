@@ -1,25 +1,22 @@
 {
-  "name": "galacean_comparation",
+  "name": "@galacean/benchmark",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@galacean/engine": "^1.0.0-beta",
-    "@galacean/engine-physics-lite": "^1.0.0-beta",
-    "@galacean/engine-physics-physx": "^1.0.0-beta",
-    "@galacean/engine-toolkit": "^1.0.0-beta",
-    "@galacean/engine-toolkit-controls": "1.0.0-beta.1",
-    "@galacean/engine-toolkit-stats": "^0.9.0",
-    "@galacean/tools-baker": "^1.0.0-beta",
-    "@types/three": "^0.150.2",
-    "babylonjs": "^6.41.0",
+    "@galacean/engine": "^1.2.0-beta",
+    "@galacean/engine-physics-lite": "^1.2.0-beta",
+    "@galacean/engine-physics-physx": "^1.2.0-beta",
+    "@galacean/engine-toolkit": "^1.2.0-beta",
+    "@types/three": "^0.164.0",
+    "babylonjs": "^7.6.0",
+    "@babylonjs/core": "^7.6.0",
+    "@babylonjs/loaders": "^7.6.0",
     "dat.gui": "^0.7.9",
     "stats.js": "^0.17.0",
-    "three": "^0.151.3"
+    "three": "^0.164.1"
   },
   "scripts": {
-    "galacean": "vite serve template --config template/vite.config.js galacean",
-    "three": "vite serve template --config template/vite.config.js three",
-    "babylon": "vite serve template --config template/vite.config.js babylon"
+    "dev": "vite serve template --config template/vite.config.ts"
   },
   "eslintConfig": {
     "extends": [

@@ -12,7 +12,7 @@ import {
   Texture2D,
   WebGLEngine,
 } from "@galacean/engine";
-import { Stats } from "@galacean/engine-toolkit-stats";
+import { Stats } from "@galacean/engine-toolkit";
 
 // Create engine object
 WebGLEngine.create({ canvas: "canvas" }).then((engine) => {
