@@ -45,6 +45,8 @@ const createScene = (): Scene => {
   );
   light2.position = new Vector3(0, 5, 5);
 
+  console.time("load");
+
   // 加载模型
   SceneLoader.ImportMesh(
     "",
@@ -66,7 +68,8 @@ const createScene = (): Scene => {
           newHero.position.z = -2.4 * 2 + j * 0.6;
         }
       }
-      hero.isVisible = false;
+      hero.isVisible = true;
+      console.timeEnd("load");
     }
   );
 

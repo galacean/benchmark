@@ -14,8 +14,8 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.y = 5;
-camera.position.z = 20;
+camera.position.set(6.5 * 1.5, 6.58 * 1.5, 8.5 * 1.5);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 const scene = new THREE.Scene();
 
@@ -23,53 +23,35 @@ var ambientLight = new THREE.AmbientLight(0xffffff);
 ambientLight.color.set(new THREE.Color(1, 1, 1));
 scene.add(ambientLight);
 
-// 创建一个TextureLoader对象
-const textureLoader = new THREE.TextureLoader();
-
 let mixers = [];
-textureLoader.load(
-  "https://gw.alipayobjects.com/mdn/rms_7c464e/afts/img/A*OStMT63k5o8AAAAAAAAAAAAAARQnAQ",
-  function (texture) {
-    texture.flipY = false;
-    const loader = new GLTFLoader();
-    loader.load(
-      "https://gw.alipayobjects.com/os/loanprod/bf055064-3eec-4d40-bce0-ddf11dfbb88a/5d78db60f211d21a43834e23/4f5e6bb277dd2fab8e2097d7a418c5bc.gltf",
-      // "https://gw.alipayobjects.com/os/bmw-prod/5e3c1e4e-496e-45f8-8e05-f89f2bd5e4a4.glb",
-      function (glTF) {
-        const model = glTF.scene;
+const loader = new GLTFLoader();
+console.time("load");
+loader.load(
+  "https://mdn.alipayobjects.com/rms/afts/file/A*DVfMRKjm6bMAAAAAAAAAAAAAARQnAQ/HVGirl.glb",
+  function (glTF) {
+    const model = glTF.scene;
 
-        // 遍历场景中的所有对象
-        model.traverse(function (child) {
-          // 检查对象是否具有材质
-          if (child.isMesh) {
-            // 遍历材质并修改纹理
-            child.material.map = texture;
-            child.material.color = new THREE.Color(1, 1, 1);
-          }
-        });
+    for (let i = 0; i < 15; i++) {
+      for (let j = 0; j < 15; j++) {
+        const cloneModel = clone(model);
+        cloneModel.position.x = -2.4 * 1.8 + i * 0.6;
+        cloneModel.position.z = -2.4 * 2 + j * 0.6;
+        cloneModel.scale.set(0.05, 0.05, 0.05);
 
-        for (let i = 0; i < 30; i++) {
-          for (let j = 0; j < 18; j++) {
-            const cloneModel = clone(model);
-            cloneModel.position.set(i * 1.0 - 15.0, j * 1.2, -j * 3.5);
-            cloneModel.scale.set(0.5, 0.5, 0.5);
+        scene.add(cloneModel);
 
-            cloneModel.rotation.set(0, -90, 0);
-
-            scene.add(cloneModel);
-
-            const mixer = new THREE.AnimationMixer(cloneModel);
-            mixers.push(mixer);
-            const animationAction = mixer.clipAction(glTF.animations[3]);
-            animationAction.play();
-          }
-        }
-      },
-      undefined,
-      function (error) {
-        console.error(error);
+        const mixer = new THREE.AnimationMixer(cloneModel);
+        mixers.push(mixer);
+        const animationAction = mixer.clipAction(glTF.animations[1]);
+        animationAction.play();
       }
-    );
+    }
+
+    console.timeEnd("load");
+  },
+  undefined,
+  function (error) {
+    console.error(error);
   }
 );
 
