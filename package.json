@@ -3,20 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babylonjs/core": "^7.6.0",
+    "@babylonjs/loaders": "^7.6.0",
     "@galacean/engine": "^1.2.0-beta",
     "@galacean/engine-physics-lite": "^1.2.0-beta",
     "@galacean/engine-physics-physx": "^1.2.0-beta",
     "@galacean/engine-toolkit": "^1.2.0-beta",
     "@types/three": "^0.164.0",
     "babylonjs": "^7.6.0",
-    "@babylonjs/core": "^7.6.0",
-    "@babylonjs/loaders": "^7.6.0",
     "dat.gui": "^0.7.9",
     "stats.js": "^0.17.0",
     "three": "^0.164.1"
   },
   "scripts": {
-    "dev": "vite serve template --config template/vite.config.ts"
+    "dev": "vite serve template --config template/vite.config.ts",
+    "build": "vite build template --config template/vite.config.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.12.12",
     "fs-extra": "^10.1.0",
     "sass": "^1.55.0",
     "typescript": "^4.8.3",
