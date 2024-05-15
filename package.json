@@ -2,6 +2,7 @@
   "name": "@galacean/benchmark",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@8.10.5",
   "dependencies": {
     "@babylonjs/core": "^7.6.0",
     "@babylonjs/loaders": "^7.6.0",
