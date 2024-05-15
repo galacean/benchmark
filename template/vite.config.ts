@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs-extra");
 const templateStr = fs.readFileSync(path.join(__dirname, "iframe.ejs"), "utf8");
+import { defineConfig } from "vite";
 
 // 替换 ejs 模版格式的字符串，如 <%= title %>: templateStr.replaceEJS("title","replaced title");
 // @ts-ignore
@@ -13,6 +14,7 @@ const platforms = fs.readdirSync(path.join(__dirname, "../src"));
 // clear mpa
 fs.emptyDirSync(path.resolve(__dirname, "mpa"));
 
+const buildInputs: Record<string, string> = {};
 // create mpa
 platforms.forEach((platform) => {
   const OUT_PATH = path.join(`mpa`, platform);
@@ -50,7 +52,13 @@ platforms.forEach((platform) => {
       path.resolve(__dirname, OUT_PATH, file + ".ts"),
       `import "../../../src/${platform}/${file}"`
     );
-    fs.outputFileSync(path.resolve(__dirname, OUT_PATH, file + ".html"), ejs);
+    const htmlFile = path.resolve(
+      __dirname,
+      OUT_PATH,
+      file + ".html"
+    ) as string;
+    fs.outputFileSync(htmlFile, ejs);
+    buildInputs[platform + "-" + file] = htmlFile;
   });
 
   // output demo list
@@ -75,7 +83,7 @@ platforms.forEach((platform) => {
   }
 });
 
-module.exports = {
+export default defineConfig({
   server: {
     open: true,
     host: "0.0.0.0",
@@ -83,6 +91,16 @@ module.exports = {
   },
   resolve: {
     dedupe: ["@galacean/engine"],
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.join(__dirname, "index.html"),
+        ...buildInputs,
+      },
+    },
+    target: "es2020",
+    outDir: path.join(process.cwd(), "dist"),
   },
   optimizeDeps: {
     exclude: [
@@ -106,4 +124,4 @@ module.exports = {
       "@galacean/engine-toolkit-stats",
     ],
   },
-};
+});
