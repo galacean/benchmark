@@ -85,7 +85,10 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
       return;
     }
 
-    iframe.src = "/mpa" + "/" + platform + "/" + labelSrc + ".html";
+    const prefix =
+      window.location.href.indexOf("/benchmark/") > -1 ? "/benchmark" : "";
+
+    iframe.src = prefix + "/mpa/" + platform + "/" + labelSrc + ".html";
 
     items.forEach(({ itemDOM }) => {
       const itemPath = `mpa/${platform}/${itemDOM.title}`;
