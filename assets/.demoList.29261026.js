@@ -1,1 +1,0 @@
-const a=[{src:"animation-benchmark",label:"Animation"},{src:"collider-benchmark",label:"Collider"}],c=[{src:"basic",label:"Basic"}],e={Benchmark:a,Basic:c};export{c as Basic,a as Benchmark,e as default};
