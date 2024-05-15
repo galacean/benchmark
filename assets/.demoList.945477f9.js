@@ -1,0 +1,1 @@
+const e=[{src:"ambient-light",label:"AmbientLight"}],t=[{src:"animation-benchmark",label:"Animation"},{src:"collider-benchmark",label:"Collider"}],a={Light:e,Benchmark:t};export{t as Benchmark,e as Light,a as default};
