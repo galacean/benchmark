@@ -18,7 +18,7 @@
   },
   "scripts": {
     "dev": "vite serve template --config template/vite.config.ts",
-    "build": "vite build template --config template/vite.config.ts"
+    "build": "vite build template --config template/vite.config.ts --base=/benchmark/"
   },
   "eslintConfig": {
     "extends": [
