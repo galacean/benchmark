@@ -4,13 +4,12 @@
  */
 
 import {
+  DirectionalLight,
   Engine,
   Scene,
-  Vector3,
   SceneLoader,
-  AnimationGroup,
-  DirectionalLight,
   UniversalCamera,
+  Vector3
 } from "@babylonjs/core";
 import "@babylonjs/loaders";
 
@@ -47,28 +46,41 @@ const createScene = (): Scene => {
 
   console.time("load");
 
-  // 加载模型
-  SceneLoader.ImportMesh(
-    "",
+  SceneLoader.LoadAssetContainer(
     "https://mdn.alipayobjects.com/rms/afts/file/A*DVfMRKjm6bMAAAAAAAAAAAAAARQnAQ/",
     "HVGirl.glb",
     scene,
-    (meshes) => {
-      const hero = meshes[0];
-      hero.scaling.scaleInPlace(0.05);
-      const sambaAnim = scene.getAnimationGroupByName(
-        "Samba"
-      ) as AnimationGroup;
-      sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+    function (container) {
+      container.meshes[0].scaling.scaleInPlace(0.05);
+      container.addAllToScene();
+
+      container.animationGroups[1].start();
+      container.animationGroups[1].loopAnimation = true;
 
       for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
-          const newHero = hero.clone("j", hero.parent)!;
-          newHero.position.x = -2.4 * 1.8 + i * 0.6;
-          newHero.position.z = -2.4 * 2 + j * 0.6;
+          const plane2Entries = <any>container.instantiateModelsToScene(
+            undefined,
+            false,
+            {
+              doNotInstantiate: true,
+            }
+          );
+
+          plane2Entries.rootNodes[0].position.x = -2.4 * 1.8 + i * 0.6;
+          plane2Entries.rootNodes[0].position.z = -2.4 * 2 + j * 0.6;
+          const animationGroup = plane2Entries.animationGroups[1];
+          animationGroup.start(
+            true,
+            1.0,
+            animationGroup.from + Math.random() * 1000,
+            animationGroup.to,
+            false
+          );
+          animationGroup.loopAnimation = true;
         }
       }
-      hero.isVisible = true;
+
       console.timeEnd("load");
     }
   );

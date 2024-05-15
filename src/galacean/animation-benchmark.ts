@@ -59,7 +59,7 @@ WebGLEngine.create({
           transform.position.x = -2.4 * 1.8 + i * 0.6;
           transform.position.z = -2.4 * 2 + j * 0.6;
 
-          modelClone.getComponent(Animator).play(glTF.animations[1].name);
+          modelClone.getComponent(Animator).play(glTF.animations[1].name,undefined,Math.random());
         }
       }
 
