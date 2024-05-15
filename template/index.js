@@ -80,6 +80,7 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
   function onHashChange() {
     const hashPath = window.location.hash.split("#")[1];
     const labelSrc = window.location.hash.split("#mpa/")[1];
+
     if (!hashPath || !items.find((item) => item.src === labelSrc)) {
       clickItem(items[0].itemDOM);
       return;
@@ -98,6 +99,15 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
         itemDOM.classList.remove("active");
       }
     });
+
+    function onOpenClick() {
+      const prefix =
+        window.location.href.indexOf("/benchmark/") > -1 ? "/benchmark" : "";
+
+      window.open(prefix + "/mpa/" + platform + "/" + labelSrc + ".html");
+    }
+
+    document.getElementById("open").addEventListener("click", onOpenClick);
   }
 
   window.onhashchange = onHashChange;
