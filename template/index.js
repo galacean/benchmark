@@ -101,7 +101,10 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
     });
 
     function onOpenClick() {
-      window.open("/mpa" + "/" + platform + "/" + labelSrc + ".html");
+      const prefix =
+        window.location.href.indexOf("/benchmark/") > -1 ? "/benchmark" : "";
+
+      window.open(prefix + "/mpa/" + platform + "/" + labelSrc + ".html");
     }
 
     document.getElementById("open").addEventListener("click", onOpenClick);
