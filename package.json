@@ -5,6 +5,7 @@
   "packageManager": "pnpm@8.10.5",
   "dependencies": {
     "@babylonjs/core": "^7.6.0",
+    "@babylonjs/havok": "^1.3.4",
     "@babylonjs/loaders": "^7.6.0",
     "@galacean/engine": "^1.2.0-beta",
     "@galacean/engine-physics-lite": "^1.2.0-beta",
