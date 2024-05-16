@@ -13,13 +13,15 @@ import {
   UnlitMaterial,
   WebGLEngine
 } from "@galacean/engine";
-import { OrbitControl } from "@galacean/engine-toolkit";
+import { OrbitControl, Stats } from "@galacean/engine-toolkit";
+import * as dat from 'dat.gui';
 
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.canvas.resizeByClientSize();
 
   // Get default active scene.
   const activeScene = engine.sceneManager.activeScene;
+  const root = activeScene.createRootEntity("root");
 
   // Add camera.
   const cameraEntity = activeScene.createRootEntity("Camera");
@@ -49,10 +51,11 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       const unlitMat = new UnlitMaterial(engine);
       unlitMat.baseTexture = <Texture2D>resources[1];
 
+      const startPosX = -3.5;
+      const startPosY = -0.0375;
       const popCat = gltf.instantiateSceneRoot();
-      popCat.transform.setPosition(-1.5, -1.5, 0);
-      popCat.transform.setScale(0.3, 0.3, 0.3);
-      activeScene.addRootEntity(popCat);
+      popCat.transform.setPosition(startPosX, startPosY, 0);
+      popCat.transform.setScale(0.075, 0.075, 0.075);
 
       // Replace material to UnlitMaterial.
       const meshRenderers = [];
@@ -60,6 +63,31 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       meshRenderers.forEach((mr) => {
         mr.setMaterial(unlitMat);
       });
+
+      const maxInstantiated = 200;
+      const perLineInstantiated = 5;
+      function instantiateModel(value) {
+        let childs = root.children.length;
+        if (childs < value) {
+          for (; childs < value; childs++) {
+            const entity = popCat.clone();
+            root.addChild(entity);
+            const x = childs % perLineInstantiated;
+            const y = Math.floor(childs / perLineInstantiated);
+            entity.transform.setPosition(startPosX + x * 1.5, startPosY, -y);
+          }
+        } else if (childs > value) {
+          for (; childs > value; childs--) {
+            root.children[childs-1].destroy();
+          }
+        }
+      }
+
+      const params = {
+        instantiated: 0
+      }
+      const gui = new dat.GUI();
+      gui.add(params, "instantiated", 0, maxInstantiated).onChange(instantiateModel);
     });
 
   engine.run();
