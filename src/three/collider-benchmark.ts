@@ -38,7 +38,10 @@ scriptPromise.then(() => {
     camera.lookAt(0, 0, 0);
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x666666);
+    scene.background = new THREE.Color();
+    var ambientLight = new THREE.AmbientLight(0xffffff);
+    ambientLight.color.set(new THREE.Color(1, 1, 1));
+    scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight();
     dirLight.position.set(-0.3, 1, 0.4);
@@ -57,22 +60,21 @@ scriptPromise.then(() => {
     // Boxes
     const geometryBox = new THREE.BoxGeometry(0.075, 0.075, 0.075);
 
-
     var boxCount = 0;
     setInterval(() => {
       if (boxCount > 850) return;
 
       addBox(
-      new THREE.Vector3(
-        Math.random() - 0.5,
-        Math.random() * 2 + 2.5,
-        Math.random() - 0.5
-      ))
+        new THREE.Vector3(
+          Math.random() - 0.5,
+          Math.random() * 2 + 2.5,
+          Math.random() - 0.5
+        )
+      );
       boxCount++;
     }, 16);
 
-    function addBox( position) {
-
+    function addBox(position) {
       let boxes = new THREE.Mesh(
         geometryBox,
         new THREE.MeshStandardMaterial({ color: 0xffffff * Math.random() })
@@ -81,9 +83,7 @@ scriptPromise.then(() => {
       boxes.receiveShadow = false;
       scene.add(boxes);
 
-      boxes.position.set(
-        position.x,position.y,position.z
-      );
+      boxes.position.set(position.x, position.y, position.z);
       physics.addMesh(boxes, 1);
     }
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
