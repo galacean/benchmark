@@ -32,9 +32,6 @@ dependencies:
   babylonjs:
     specifier: ^7.6.0
     version: 7.6.0
-  cannon:
-    specifier: ^0.6.2
-    version: 0.6.2
   dat.gui:
     specifier: ^0.7.9
     version: 0.7.9
@@ -332,10 +329,6 @@ packages:
     dependencies:
       fill-range: 7.0.1
     dev: true
-
-  /cannon@0.6.2:
-    resolution: {integrity: sha512-n/7wWSXr8KOSvjad2x0fJHgpMepKjOKi+NdSnjfYyijoDBZnp4JQKgPcpv28jlXoWM+N9zVYU09J0A6Qxx+Y7w==}
-    dev: false
 
   /chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
