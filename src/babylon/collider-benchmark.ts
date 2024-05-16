@@ -7,10 +7,9 @@ import {
   DirectionalLight,
   Engine,
   Scene,
-  SceneLoader,
+  HemisphericLight,
   UniversalCamera,
   HavokPlugin,
-  CannonJSPlugin,
   MeshBuilder,
   Vector3,
   PhysicsAggregate,
@@ -25,6 +24,9 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 document.body.appendChild(canvas);
 // Generate the BABYLON 3D engine
 const engine = new Engine(canvas, true);
+
+canvas.width = canvas.clientWidth * window.devicePixelRatio;
+canvas.height = canvas.clientHeight * window.devicePixelRatio;
 
 // Create the scene
 const createScene = async function () {
@@ -42,14 +44,17 @@ const createScene = async function () {
 
   // Targets the camera to a particular position. In this case the scene origin
   camera.setTarget(Vector3.Zero());
+  const hemisphericLight = new HemisphericLight("hemisphericLight", new Vector3(0, 1, 0), scene);
+  hemisphericLight.intensity = 1;
 
   const light = new DirectionalLight(
     "dir01",
-    new Vector3(0, -0.5, -1.0),
+    new Vector3(0, 0, 0),
     scene
   );
-  light.position = new Vector3(0, 5, 5);
+  light.position = new Vector3(-0.3, 1, 0.4);
   light.shadowEnabled = false;
+  light.intensity = 1;
 
   // Create a ground plane
   const ground = MeshBuilder.CreateGround(
