@@ -44,7 +44,7 @@ const createScene = async function () {
 
   // Targets the camera to a particular position. In this case the scene origin
   camera.setTarget(Vector3.Zero());
-  const hemisphericLight = new HemisphericLight("hemisphericLight", new BABYLON.Vector3(0, 1, 0), scene);
+  const hemisphericLight = new HemisphericLight("hemisphericLight", new Vector3(0, 1, 0), scene);
   hemisphericLight.intensity = 1;
 
   const light = new DirectionalLight(
