@@ -13,18 +13,21 @@ import {
   Texture2D,
   WebGLEngine
 } from "@galacean/engine";
-import { OrbitControl } from "@galacean/engine-toolkit";
+import { OrbitControl, Stats } from "@galacean/engine-toolkit";
+import * as dat from "dat.gui";
 
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.canvas.resizeByClientSize();
 
   // Get default active scene.
   const activeScene = engine.sceneManager.activeScene;
+  const root = activeScene.createRootEntity("root");
 
   // Add camera.
   const cameraEntity = activeScene.createRootEntity("Camera");
   cameraEntity.transform.setPosition(0, 0, 10);
   cameraEntity.addComponent(Camera);
+  cameraEntity.addComponent(Stats);
   cameraEntity.addComponent(OrbitControl);
 
   const light = activeScene.createRootEntity("Light");
@@ -102,10 +105,11 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       pbrMat.clearCoatRoughnessTexture = clearCoatRoughnessTexture;
       pbrMat.clearCoatNormalTexture = clearCoatNormalTexture;
 
+      const startPosX = -3.5;
+      const startPosY = -0.0375;
       const popCat = gltf.instantiateSceneRoot();
-      popCat.transform.setPosition(-1.5, -1.5, 0);
-      popCat.transform.setScale(0.3, 0.3, 0.3);
-      activeScene.addRootEntity(popCat);
+      popCat.transform.setPosition(startPosX, startPosY, 0);
+      popCat.transform.setScale(0.075, 0.075, 0.075);
 
       // Replace material to PBRMaterial.
       const meshRenderers = [];
@@ -113,6 +117,31 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       meshRenderers.forEach((mr) => {
         mr.setMaterial(pbrMat);
       });
+
+      const maxInstantiated = 200;
+      const perLineInstantiated = 5;
+      function instantiateModel(value) {
+        let childs = root.children.length;
+        if (childs < value) {
+          for (; childs < value; childs++) {
+            const entity = popCat.clone();
+            root.addChild(entity);
+            const x = childs % perLineInstantiated;
+            const y = Math.floor(childs / perLineInstantiated);
+            entity.transform.setPosition(startPosX + x * 1.5, startPosY, -y);
+          }
+        } else if (childs > value) {
+          for (; childs > value; childs--) {
+            root.children[childs-1].destroy();
+          }
+        }
+      }
+
+      const params = {
+        instantiated: 0
+      }
+      const gui = new dat.GUI();
+      gui.add(params, "instantiated", 0, maxInstantiated).onChange(instantiateModel);
     });
 
   engine.run();
