@@ -85,7 +85,7 @@ const createScene = async function () {
 
   var boxCount = 0;
   setInterval(() => {
-    if (boxCount > 850) return;
+    if (boxCount > 1000) return;
 
     addBox(
       scene,
