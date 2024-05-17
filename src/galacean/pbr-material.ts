@@ -20,17 +20,18 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.canvas.resizeByClientSize();
 
   // Get default active scene.
-  const activeScene = engine.sceneManager.activeScene;
-  const root = activeScene.createRootEntity("root");
+  const scene = engine.sceneManager.activeScene;
+  const root = scene.createRootEntity("root");
 
   // Add camera.
-  const cameraEntity = activeScene.createRootEntity("Camera");
+  const cameraEntity = scene.createRootEntity("Camera");
   cameraEntity.transform.setPosition(0, 0, 10);
-  cameraEntity.addComponent(Camera);
+  const camera = cameraEntity.addComponent(Camera);
+  camera.enableFrustumCulling = false;
   cameraEntity.addComponent(Stats);
   cameraEntity.addComponent(OrbitControl);
 
-  const light = activeScene.createRootEntity("Light");
+  const light = scene.createRootEntity("Light");
   light.transform.setPosition(0, 3, 0);
   light.transform.setRotation(-45, -45, 0);
   light.addComponent(DirectLight);
@@ -38,7 +39,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.resourceManager
     .load([
       {
-        url: "https://mdn.alipayobjects.com/oasis_be/afts/file/A*5yMJTIxb1l4AAAAAAAAAAAAADkp5AQ/popcat_base.glb",
+        url: "https://mdn.alipayobjects.com/oasis_be/afts/file/A*WmviTKgN7_QAAAAAAAAAAAAADkp5AQ/popcat_combine.glb",
         type: AssetType.GLTF
       },
       {
@@ -105,11 +106,10 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       pbrMat.clearCoatRoughnessTexture = clearCoatRoughnessTexture;
       pbrMat.clearCoatNormalTexture = clearCoatNormalTexture;
 
-      const startPosX = -3.5;
-      const startPosY = -0.0375;
       const popCat = gltf.instantiateSceneRoot();
-      popCat.transform.setPosition(startPosX, startPosY, 0);
-      popCat.transform.setScale(0.075, 0.075, 0.075);
+      const transform = popCat.transform;
+      transform.setPosition(0, 0, 0);
+      transform.scale.scale(0.01);
 
       // Replace material to PBRMaterial.
       const meshRenderers = [];
@@ -118,20 +118,21 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
         mr.setMaterial(pbrMat);
       });
 
-      const maxInstantiated = 200;
-      const perLineInstantiated = 5;
-      function instantiateModel(value) {
+      const border = 7.5;
+      function instantiateModel(instantiateCount) {
         let childs = root.children.length;
-        if (childs < value) {
-          for (; childs < value; childs++) {
+        if (childs < instantiateCount) {
+          for (; childs < instantiateCount; ++childs) {
             const entity = popCat.clone();
             root.addChild(entity);
-            const x = childs % perLineInstantiated;
-            const y = Math.floor(childs / perLineInstantiated);
-            entity.transform.setPosition(startPosX + x * 1.5, startPosY, -y);
+            const x = Math.random() * border - border / 2;
+            const z =  Math.random() * border - border / 2;
+            const transform = entity.transform;
+            transform.setPosition(x, 0, -z);
+            transform.setRotation(-90, Math.random() * 360, 0);
           }
-        } else if (childs > value) {
-          for (; childs > value; childs--) {
+        } else {
+          for (; childs > instantiateCount; childs--) {
             root.children[childs-1].destroy();
           }
         }
@@ -141,7 +142,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
         instantiated: 0
       }
       const gui = new dat.GUI();
-      gui.add(params, "instantiated", 0, maxInstantiated).onChange(instantiateModel);
+      gui.add(params, "instantiated", 0, 500).onChange(instantiateModel);
     });
 
   engine.run();
