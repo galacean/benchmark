@@ -11,12 +11,10 @@ import {
   AssetType,
   UnlitMaterial,
   Texture2D,
+  GLTFResource,
 } from '@galacean/engine';
-import { OrbitControl } from "@galacean/engine-toolkit";
-
-function segmentsValue(triangles: number) {
-  return Math.floor(Math.sqrt(triangles / 2));
-}
+import { OrbitControl, Stats } from "@galacean/engine-toolkit";
+import * as dat from "dat.gui";
 
 WebGLEngine.create({canvas: "canvas"}).then((engine) => {
   engine.canvas.resizeByClientSize();
@@ -26,23 +24,42 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
   // Create camera entity.
   const cameraEntity = scene.createRootEntity("Camera");
   cameraEntity.transform.setPosition(0, 0, 10);
-  cameraEntity.addComponent(Camera);
+  const camera = cameraEntity.addComponent(Camera);
+  camera.enableFrustumCulling = false;
+  cameraEntity.addComponent(Stats);
   cameraEntity.addComponent(OrbitControl);
 
-  engine.resourceManager.load(
-    {
-      url: "https://mdn.alipayobjects.com/oasis_be/afts/img/A*y-7ESpF4XNUAAAAAAAAAAAAADkp5AQ/original/earth.jpg",
-      type: AssetType.Texture2D
-    }
-  ).then((texture) => {
-    const modelEntity = scene.createRootEntity("Model");
+  const root = scene.createRootEntity("root");
 
-    const mr = modelEntity.addComponent(MeshRenderer);
-    mr.mesh = PrimitiveMesh.createSphere(engine, 1, segmentsValue(4000000), true);
-    const mat = new UnlitMaterial(engine);
-    mr.setMaterial(mat);
-    mat.baseTexture = texture as Texture2D;
+  function createModel(url) {
+    if (root.children.length > 0) {
+      const children = root.children;
+      for (let i = 0, count = children.length; i < count; i++) {
+        children[i].destroy();
+      }
+    }
+    engine.resourceManager.load(url).then((resource) => {
+      const gltf = <GLTFResource>resource;
+      const model = gltf.instantiateSceneRoot();
+      model.transform.scale.scale(0.3);
+      root.addChild(model);
+    });
+  }
+
+  const params = {
+    model: "Base"
+  };
+  const modelURL = {
+    "Low": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*m9BeQLj1NCEAAAAAAAAAAAAADkp5AQ/popcat_combine_low.glb",
+    "Base": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*WmviTKgN7_QAAAAAAAAAAAAADkp5AQ/popcat_combine.glb",
+    "High": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*r7NhSKXOH6gAAAAAAAAAAAAADkp5AQ/popcat_combine_high2.glb"
+  }
+  const gui = new dat.GUI();
+  gui.add(params, "model", Object.keys(modelURL)).onChange(value => {
+    createModel(modelURL[value]);
   });
+
+  createModel(modelURL[params.model]);
 
   engine.run();
 });
