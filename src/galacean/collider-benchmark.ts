@@ -20,7 +20,6 @@ import {
   WebGLEngine,
 } from "@galacean/engine";
 import { OrbitControl } from "@galacean/engine-toolkit";
-import { Stats } from "@galacean/engine-toolkit";
 
 import { PhysXPhysics } from "@galacean/engine-physics-physx";
 
@@ -36,7 +35,7 @@ function init(rootEntity: Entity) {
 
   var boxCount = 0;
   setInterval(() => {
-    if (boxCount > 850) return;
+    if (boxCount > 1000) return;
 
     addBox(
       rootEntity,
@@ -129,8 +128,6 @@ WebGLEngine.create({ canvas: "canvas", physics: new PhysXPhysics(), graphicDevic
     const pos = cameraEntity.transform.position;
     pos.set(-1, 1.5, 2);
     cameraEntity.transform.lookAt(new Vector3());
-    cameraEntity.addComponent(OrbitControl);
-    cameraEntity.addComponent(Stats);
 
     // init directional light
     const light = rootEntity.createChild("light");
