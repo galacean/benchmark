@@ -27,6 +27,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   const cameraEntity = activeScene.createRootEntity("Camera");
   cameraEntity.transform.setPosition(0, 0, 10);
   cameraEntity.addComponent(Camera);
+  cameraEntity.addComponent(Stats);
   cameraEntity.addComponent(OrbitControl);
 
   const light = activeScene.createRootEntity("Light");
