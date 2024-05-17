@@ -117,7 +117,7 @@ function addBox(
   return boxEntity;
 }
 //----------------------------------------------------------------------------------------------------------------------
-WebGLEngine.create({ canvas: "canvas", physics: new PhysXPhysics() }).then(
+WebGLEngine.create({ canvas: "canvas", physics: new PhysXPhysics(), graphicDeviceOptions: { powerPreference: "high-performance" } }).then(
   (engine) => {
     engine.canvas.resizeByClientSize();
     const scene = engine.sceneManager.activeScene;
