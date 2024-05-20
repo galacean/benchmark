@@ -98,21 +98,22 @@ export default defineConfig({
         main: path.join(__dirname, "index.html"),
         ...buildInputs,
       },
+      external: ["@babel/runtime/helpers/defineProperty"],
     },
     target: "es2020",
     outDir: path.join(process.cwd(), "dist"),
   },
   optimizeDeps: {
-      esbuildOptions: {
-        target: "esnext", 
-        // Node.js global to browser globalThis
-        define: {
-          global: 'globalThis'
-        },
-        supported: { 
-          bigint: true 
-        },
+    esbuildOptions: {
+      target: "esnext",
+      // Node.js global to browser globalThis
+      define: {
+        global: "globalThis",
       },
+      supported: {
+        bigint: true,
+      },
+    },
     exclude: [
       "@galacean/engine",
       "@galacean/engine-draco",
