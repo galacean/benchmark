@@ -7,12 +7,12 @@ import {
   Engine,
   Scene,
   Vector3,
-  ArcRotateCamera,
   DefaultRenderingPipeline,
   ParticleSystem,
   Color4,
   Texture,
   MeshBuilder,
+  UniversalCamera,
 } from "@babylonjs/core";
 import "@babylonjs/loaders";
 
@@ -26,17 +26,15 @@ canvas.width = canvas.clientWidth * window.devicePixelRatio;
 canvas.height = canvas.clientHeight * window.devicePixelRatio;
 
 // Create the scene
-var createScene = function () {
+const createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
-  var scene = new Scene(engine);
+  const scene = new Scene(engine);
+  scene.clearColor.set(0, 0, 0, 1);
 
   // Camera
-  var camera = new ArcRotateCamera(
+  var camera = new UniversalCamera(
     "ArcRotateCamera",
-    0,
-    0,
-    50,
-    new Vector3(0, 0, 0),
+    new Vector3(0, 0, -100),
     scene
   );
   // This attaches the camera to the canvas
@@ -44,16 +42,19 @@ var createScene = function () {
 
   // Set up new rendering pipeline
   const pipeline = new DefaultRenderingPipeline("default", true, scene);
-  console.time("load");
   const texture = new Texture(
-    "https://playground.babylonjs.com/textures/flare.png",
+    "https://mdn.alipayobjects.com/huamei_b4l2if/afts/img/A*JPsCSK5LtYkAAAAAAAAAAAAADil6AQ/original",
     scene
   );
-  console.timeEnd("load");
 
   // Fire!
-  for (let i = 0; i < 12; i++) {
-    for (let j = 0; j < 18; j++) {
+  const xCount = 12;
+  const yCount = 15;
+  const xSpacing = 2.2;
+  const ySpacing = 3.5;
+
+  for (let i = 0; i < xCount; i++) {
+    for (let j = 0; j < yCount; j++) {
       // Create a particle system
       const particleSystem = new ParticleSystem("particles", 1000, scene);
 
@@ -62,7 +63,11 @@ var createScene = function () {
 
       const emitter = MeshBuilder.CreateSphere("emitter", { diameter: 1 });
       emitter.isVisible = false; // Hide the sphere mesh
-      emitter.position = new Vector3(i * 3 - 17.5, 0, j * 4 - 35);
+      emitter.position = new Vector3(
+        (i - xCount / 2) * xSpacing,
+        (j - yCount / 2) * ySpacing,
+        0
+      );
 
       // Where the particles come from
       particleSystem.emitter = emitter;
@@ -83,13 +88,13 @@ var createScene = function () {
       particleSystem.emitRate = 1000;
 
       // Blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD
-      particleSystem.blendMode = ParticleSystem.BLENDMODE_ONEONE;
+      particleSystem.blendMode = ParticleSystem.BLENDMODE_STANDARD;
 
       // Set the gravity of all particles
-      particleSystem.gravity = new Vector3(9.81, 0, 0);
+      particleSystem.gravity = new Vector3(0, -9.81, 0);
 
       // Direction of each particle after it has been emitted
-      particleSystem.direction1 = new Vector3(-1, 1, -1);
+      particleSystem.direction1 = new Vector3(-1, -1, -1);
       particleSystem.direction2 = new Vector3(1, 1, 1);
 
       // Angular speed, in radians

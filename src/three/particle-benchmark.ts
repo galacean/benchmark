@@ -31,7 +31,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 50;
+camera.position.z = 100;
 
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
@@ -43,11 +43,16 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new THREE.TextureLoader();
 console.time("load");
 loader.load(
-  "https://playground.babylonjs.com/textures/flare.png",
+  "https://mdn.alipayobjects.com/huamei_b4l2if/afts/img/A*JPsCSK5LtYkAAAAAAAAAAAAADil6AQ/original",
   (texture) => {
     const material = new THREE.SpriteMaterial({
       map: texture,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.CustomBlending,
+      blendSrc: THREE.SrcAlphaFactor,
+      blendDst: THREE.OneFactor,
+      blendEquation: THREE.AddEquation,
+      blendSrcAlpha: THREE.OneFactor,
+      blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
     });
     console.timeEnd("load");
     // Create a particle system
@@ -74,15 +79,16 @@ loader.load(
 
     const system = new ParticleSystem();
 
-    const xCount = 18;
-    const yCount = 12;
-    const spacing = 5;
+    const xCount = 15;
+    const yCount = 20;
+    const xSpacing = 4;
+    const ySpacing = 5;
 
     for (let x = 0; x < xCount; x++) {
       for (let y = 0; y < yCount; y++) {
         const position = new THREE.Vector3(
-          (x - xCount / 2) * spacing,
-          (y - yCount / 2) * spacing,
+          (x - xCount / 2) * xSpacing,
+          (y - yCount / 2) * ySpacing,
           0
         );
         const emitter = createEmitter(position);

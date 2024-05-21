@@ -98,7 +98,6 @@ export default defineConfig({
         main: path.join(__dirname, "index.html"),
         ...buildInputs,
       },
-      external: ["@babel/runtime/helpers/defineProperty"],
     },
     target: "es2020",
     outDir: path.join(process.cwd(), "dist"),
