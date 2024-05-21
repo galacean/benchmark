@@ -49,7 +49,7 @@ loader.load(
       map: texture,
       blending: THREE.CustomBlending,
       blendSrc: THREE.SrcAlphaFactor,
-      blendDst: THREE.OneFactor,
+      blendDst: THREE.OneMinusSrcAlphaFactor,
       blendEquation: THREE.AddEquation,
       blendSrcAlpha: THREE.OneFactor,
       blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
@@ -80,7 +80,7 @@ loader.load(
     const system = new ParticleSystem();
 
     const xCount = 15;
-    const yCount = 20;
+    const yCount = 12;
     const xSpacing = 4;
     const ySpacing = 5;
 
