@@ -21,7 +21,6 @@ import ParticleSystem, {
   Color,
   RandomDrift,
 } from "three-nebula";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Initialize scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -31,7 +30,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 180;
+camera.position.z = 220;
 
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
@@ -79,7 +78,7 @@ loader.load(
     const system = new ParticleSystem();
 
     const xCount = 25;
-    const yCount = 30;
+    const yCount = 20;
     const xSpacing = 3;
     const ySpacing = 5;
 
