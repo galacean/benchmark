@@ -39,8 +39,8 @@ WebGLEngine.create({
   const camera = cameraEntity.addComponent(Camera);
   camera.farClipPlane = 500;
 
-  const xCount = 20;
-  const yCount = 25;
+  const xCount = 25;
+  const yCount = 20;
   const xSpacing = 3;
   const ySpacing = 5;
 
