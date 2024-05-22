@@ -15,10 +15,10 @@ import {
   ParticleMaterial,
   ParticleRenderer,
   SphereShape,
+  Texture2D,
   Vector3,
   WebGLEngine,
 } from "@galacean/engine";
-import { Stats } from "@galacean/engine-toolkit";
 
 // Create engine
 WebGLEngine.create({
@@ -30,39 +30,45 @@ WebGLEngine.create({
 
   const scene = engine.sceneManager.activeScene;
   const rootEntity = scene.createRootEntity();
-  scene.background.solidColor = new Color(0.25, 0.25, 0.25, 1);
+  scene.background.solidColor = new Color(0, 0, 0, 1);
 
   // Create camera
   const cameraEntity = rootEntity.createChild("camera_entity");
-  cameraEntity.transform.position = new Vector3(0, 1, 130);
+  cameraEntity.transform.position = new Vector3(0, 0, 100);
 
   const camera = cameraEntity.addComponent(Camera);
   camera.farClipPlane = 200;
-  cameraEntity.addComponent(Stats);
   camera.fieldOfView = 60;
 
-  console.time("load");
+  const xCount = 12;
+  const yCount = 15;
+  const xSpacing = 3;
+  const ySpacing = 5;
+
   engine.resourceManager
     .load({
-      url: "https://playground.babylonjs.com/textures/flare.png",
+      url: "https://mdn.alipayobjects.com/huamei_b4l2if/afts/img/A*JPsCSK5LtYkAAAAAAAAAAAAADil6AQ/original",
       type: AssetType.Texture2D,
     })
-    .then((texture) => {
+    .then((texture: Texture2D) => {
       const material = new ParticleMaterial(engine);
       material.baseColor = new Color(1.0, 1.0, 1.0, 1.0);
-      material.blendMode = BlendMode.Additive;
+      material.blendMode = BlendMode.Normal;
+
       material.baseTexture = texture;
 
       const fireEntity = createFireParticle(engine, material);
-      for (let i = 0; i < 18; i++) {
-        for (let j = 0; j < 12; j++) {
+      for (let x = 0; x < xCount; x++) {
+        for (let y = 0; y < yCount; y++) {
           const cloneFire = fireEntity.clone();
-          cloneFire.transform.setPosition(i * 15 - 130, j * 10 - 60, 0);
+          cloneFire.transform.setPosition(
+            (x - xCount / 2) * xSpacing,
+            (y - yCount / 2) * ySpacing,
+            0
+          );
           rootEntity.addChild(cloneFire);
         }
       }
-
-      console.timeEnd("load");
     });
 
   engine.run();
