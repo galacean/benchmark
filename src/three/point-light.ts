@@ -5,17 +5,20 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
-function random(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
+import { clone } from "three/examples/jsm/utils/SkeletonUtils";
 
 // init
 const scene = new THREE.Scene();
 
 // 初始化相机
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 10, 40);
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+const scale = 2.5;
+camera.position.set(6.5 * scale, 6.58 * scale, 8.5 * scale);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 // 初始化渲染器
@@ -25,26 +28,23 @@ canvas.height = canvas.clientHeight * window.devicePixelRatio;
 
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  antialias: true
+  antialias: true,
 });
 
 const controls = new OrbitControls(camera, renderer.domElement);
-
-// 创建平面
-const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 1);
-const planeMaterial = new THREE.MeshStandardMaterial();
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
 
 // 创建点光源
 const lightCount = 10;
 for (let i = 0; i < lightCount; i++) {
   const light = new THREE.PointLight();
-  light.position.set(random(-5, 5), random(1, 4), random(-5, 5));
-  light.distance = 5;
+  light.position.set(-8 + i * 2, 5, 0);
+  light.distance = 20;
   light.decay = 0.1;
-  light.color.setRGB(random(0, 1), random(0, 1), random(0, 1));
+  light.color.setRGB(
+    Math.pow(0.5, 2.2),
+    Math.pow(0.2, 2.2),
+    Math.pow(0.7, 2.2)
+  );
   scene.add(light);
 
   const lightGeometry = new THREE.SphereGeometry(0.3, 32, 32);
@@ -62,6 +62,16 @@ loader.load(
     const model = gltf.scene;
     scene.add(model);
     model.position.y = 1;
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        const cloneModel = clone(model);
+        cloneModel.position.x = -8 + i * 2;
+        cloneModel.position.y = 2;
+        cloneModel.position.z = -10 + j * 2;
+
+        scene.add(cloneModel);
+      }
+    }
   }
 );
 
