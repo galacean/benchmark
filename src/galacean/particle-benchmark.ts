@@ -34,14 +34,14 @@ WebGLEngine.create({
 
   // Create camera
   const cameraEntity = rootEntity.createChild("camera_entity");
-  cameraEntity.transform.position = new Vector3(0, 0, 100);
+  cameraEntity.transform.position = new Vector3(0, 0, 180);
 
   const camera = cameraEntity.addComponent(Camera);
   camera.farClipPlane = 200;
   camera.fieldOfView = 60;
 
-  const xCount = 12;
-  const yCount = 15;
+  const xCount = 25;
+  const yCount = 30;
   const xSpacing = 3;
   const ySpacing = 5;
 
