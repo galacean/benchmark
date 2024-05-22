@@ -31,12 +31,11 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 100;
+camera.position.z = 180;
 
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
-const controls = new OrbitControls(camera, renderer.domElement);
 
 // Load texture for particles
 
@@ -79,9 +78,9 @@ loader.load(
 
     const system = new ParticleSystem();
 
-    const xCount = 15;
-    const yCount = 12;
-    const xSpacing = 4;
+    const xCount = 25;
+    const yCount = 30;
+    const xSpacing = 3;
     const ySpacing = 5;
 
     for (let x = 0; x < xCount; x++) {

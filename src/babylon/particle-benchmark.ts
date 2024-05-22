@@ -34,11 +34,9 @@ const createScene = function () {
   // Camera
   var camera = new UniversalCamera(
     "ArcRotateCamera",
-    new Vector3(0, 0, -100),
+    new Vector3(0, 0, -180),
     scene
   );
-  // This attaches the camera to the canvas
-  camera.attachControl(canvas, true);
 
   // Set up new rendering pipeline
   const pipeline = new DefaultRenderingPipeline("default", true, scene);
@@ -48,10 +46,10 @@ const createScene = function () {
   );
 
   // Fire!
-  const xCount = 12;
-  const yCount = 15;
-  const xSpacing = 2.2;
-  const ySpacing = 3.5;
+  const xCount = 25;
+  const yCount = 30;
+  const xSpacing = 3;
+  const ySpacing = 5;
 
   for (let i = 0; i < xCount; i++) {
     for (let j = 0; j < yCount; j++) {
