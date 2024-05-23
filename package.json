@@ -14,10 +14,13 @@
     "@galacean/engine-toolkit": "^1.2.0-beta",
     "@types/three": "^0.164.0",
     "babylonjs": "^7.6.0",
+    "babylonjs-gui": "^7.8.0",
+    "babylonjs-loaders": "^7.8.0",
     "dat.gui": "^0.7.9",
     "stats.js": "^0.17.0",
     "three": "^0.164.1",
-    "three-nebula": "^10.0.3"
+    "three-nebula": "^10.0.3",
+    "three-spritetext": "^1.8.2"
   },
   "scripts": {
     "dev": "vite serve template --config template/vite.config.ts",
