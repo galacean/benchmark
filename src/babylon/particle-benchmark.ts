@@ -34,7 +34,7 @@ const createScene = function () {
   // Camera
   var camera = new UniversalCamera(
     "ArcRotateCamera",
-    new Vector3(0, 0, -180),
+    new Vector3(0, 0, -220),
     scene
   );
 
@@ -47,7 +47,7 @@ const createScene = function () {
 
   // Fire!
   const xCount = 25;
-  const yCount = 30;
+  const yCount = 20;
   const xSpacing = 3;
   const ySpacing = 5;
 
