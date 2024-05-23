@@ -6,7 +6,7 @@ const items = []; // itemDOM,label
 
 const platforms = ["galacean", "three", "babylon"];
 
-const url = new URL(window.location.href);
+let url = new URL(window.location.href);
 const platform = url.searchParams.get("platform") ?? "galacean";
 
 platforms.splice(platforms.indexOf(platform), 1);
@@ -74,7 +74,9 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
   }
 
   function clickItem(itemDOM) {
+    console.log('on hash change')
     window.location.hash = `#mpa/${itemDOM.title}`;
+    url = new URL(window.location.href);
   }
 
   function onHashChange() {
