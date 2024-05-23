@@ -4,7 +4,7 @@
  */
 
 import { Vector3, Engine, Scene, UniversalCamera } from "@babylonjs/core";
-import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
 
 // 创建画布元素
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
