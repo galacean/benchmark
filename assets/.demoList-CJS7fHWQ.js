@@ -1,0 +1,1 @@
+const e=[{src:"animation-benchmark",label:"Animation"},{src:"collider-benchmark",label:"Collider"},{src:"particle-benchmark",label:"Particle"},{src:"sprite-benchmark",label:"Sprite"},{src:"text-benchmark",label:"Text"}],t=[{src:"point-light",label:"Point Light"}],a={Benchmark:e,Light:t};export{e as Benchmark,t as Light,a as default};
