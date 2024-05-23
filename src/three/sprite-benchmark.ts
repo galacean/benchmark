@@ -7,8 +7,8 @@ import * as THREE from "three";
 const scene = new THREE.Scene();
 
 // 创建正交相机
-const width = window.innerWidth;
-const height = window.innerHeight;
+const width = window.innerWidth * window.devicePixelRatio;
+const height = window.innerHeight * window.devicePixelRatio;
 const aspectRatio = width / height;
 const camera = new THREE.OrthographicCamera(
   -aspectRatio,
@@ -21,8 +21,11 @@ const camera = new THREE.OrthographicCamera(
 camera.position.z = 5;
 
 // 创建渲染器，并指定 canvas 元素作为渲染目标
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+canvas.width = canvas.clientWidth * window.devicePixelRatio;
+canvas.height = canvas.clientHeight * window.devicePixelRatio;
 const renderer = new THREE.WebGLRenderer({
-  canvas: document.getElementById("canvas"),
+  canvas,
 });
 renderer.setSize(width, height);
 
@@ -34,8 +37,8 @@ const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap });
 
 const col = 22;
 const row = 90;
-const offsetX = 0.043;
-const offsetY = 0.025;
+const offsetX = 0.023;
+const offsetY = 0.015;
 // 中心点所在行列
 const centerX = col * 0.5;
 const centerY = row * 0.5;
@@ -43,9 +46,9 @@ const sprites = [];
 for (let i = 0; i < row; ++i) {
   for (let j = 0; j < col; ++j) {
     const sprite = new THREE.Sprite(spriteMaterial);
-    sprite.scale.set(0.1, 0.1, 0.1); // 设置精灵大小
+    sprite.scale.set(0.05, 0.05, 0.05); // 设置精灵大小
     scene.add(sprite);
-    sprite.position.set((j - centerX) * offsetX, (i - centerY) * offsetY, 0);
+    sprite.position.set((j - centerX) * offsetX - 0.2, (i - centerY) * offsetY + 0.5, 0);
     sprites.push(sprite);
   }
 }
