@@ -13,7 +13,6 @@ import {
   Texture2D,
   WebGLEngine
 } from "@galacean/engine";
-import { OrbitControl, Stats } from "@galacean/engine-toolkit";
 import * as dat from "dat.gui";
 
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
@@ -28,8 +27,6 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   cameraEntity.transform.setPosition(0, 0, 10);
   const camera = cameraEntity.addComponent(Camera);
   camera.enableFrustumCulling = false;
-  cameraEntity.addComponent(Stats);
-  cameraEntity.addComponent(OrbitControl);
 
   const light = scene.createRootEntity("Light");
   light.transform.setPosition(0, 3, 0);
