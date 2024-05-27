@@ -10,7 +10,8 @@ import {
   MeshRenderer,
   Texture2D,
   UnlitMaterial,
-  WebGLEngine
+  WebGLEngine,
+  Vector3
 } from "@galacean/engine";
 import * as dat from "dat.gui";
 
@@ -46,7 +47,8 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
 
   // Add camera.
   const cameraEntity = scene.createRootEntity("Camera");
-  cameraEntity.transform.setPosition(0, 0, 10);
+  cameraEntity.transform.setPosition(8 * 1.7, 6 * 1.7, 10 * 1.7);
+  cameraEntity.transform.lookAt(new Vector3(0, 0, 0));
   const camera = cameraEntity.addComponent(Camera);
   camera.enableFrustumCulling = false;
 
