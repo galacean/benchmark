@@ -5,12 +5,7 @@
 
 import {
   Camera,
-  MeshRenderer,
-  PrimitiveMesh,
   WebGLEngine,
-  AssetType,
-  UnlitMaterial,
-  Texture2D,
   GLTFResource,
 } from '@galacean/engine';
 import { OrbitControl, Stats } from "@galacean/engine-toolkit";
@@ -40,14 +35,14 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
       }
     }
     engine.resourceManager.load(url).then((resource) => {
-      const gltf = <GLTFResource>resource;
+      const gltf = resource as GLTFResource;
       const model = gltf.instantiateSceneRoot();
       model.transform.scale.scale(0.03);
       root.addChild(model);
       for (let i = 0, length = instantiateCount - 1; i < length; ++i) {
         const entity = model.clone();
         const x = Math.random() * border - border / 2;
-        const z =  Math.random() * border - border / 2;
+        const z = Math.random() * border - border / 2;
         const transform = entity.transform;
         transform.setPosition(x, 0, -z);
         transform.setRotation(-90, Math.random() * 360, 0);
@@ -64,7 +59,7 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
     "Low": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*m9BeQLj1NCEAAAAAAAAAAAAADkp5AQ/popcat_combine_low.glb",
     "Medium": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*WmviTKgN7_QAAAAAAAAAAAAADkp5AQ/popcat_combine.glb",
     "High": "https://mdn.alipayobjects.com/oasis_be/afts/file/A*r7NhSKXOH6gAAAAAAAAAAAAADkp5AQ/popcat_combine_high2.glb"
-  }
+  };
   const gui = new dat.GUI();
   gui.add(params, "model", Object.keys(modelURL)).onChange(value => {
     createModel(modelURL[value], 1);

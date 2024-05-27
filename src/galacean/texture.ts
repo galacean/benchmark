@@ -106,7 +106,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
           const entity = popCat.clone();
           scene.addRootEntity(entity);
           const x = Math.random() * border - border / 2;
-          const z =  Math.random() * border - border / 2;
+          const z = Math.random() * border - border / 2;
           const transform = entity.transform;
           transform.setPosition(x, 0, -z);
           transform.setRotation(-90, Math.random() * 360, 0);
