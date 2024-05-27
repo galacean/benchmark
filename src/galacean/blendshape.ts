@@ -9,9 +9,6 @@ import {
   Animator,
   Vector3,
   DirectLight,
-  SkinnedMeshRenderer,
-  ModelMesh,
-  Script
 } from "@galacean/engine";
 
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
