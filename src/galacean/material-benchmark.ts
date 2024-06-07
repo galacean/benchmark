@@ -12,9 +12,17 @@ import {
   PBRMaterial,
   Texture2D,
   WebGLEngine,
-  Vector3
+  Vector3,
+  UnlitMaterial,
+  Animator
 } from "@galacean/engine";
 import * as dat from "dat.gui";
+
+function createUnlitMat(engine: WebGLEngine, baseTexture): UnlitMaterial {
+  const unlitMat = new UnlitMaterial(engine);
+  unlitMat.baseTexture = baseTexture;
+  return unlitMat;
+}
 
 function createPBRMat(engine: WebGLEngine, baseTexture, specularTexture, displacementTexture, normalTexture, emissiveTexture, aoTexture, clearCoatTexture, clearCoatRoughnessTexture, clearCoatNormalTexture): PBRMaterial {
   const pbrMat = new PBRMaterial(engine);
@@ -67,7 +75,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.resourceManager
     .load([
       {
-        url: "https://mdn.alipayobjects.com/oasis_be/afts/file/A*WmviTKgN7_QAAAAAAAAAAAAADkp5AQ/popcat_combine.glb",
+        url: "https://mdn.alipayobjects.com/oasis_be/afts/file/A*g42yQrAsYKcAAAAAAAAAAAAADkp5AQ/popcat_combine_anim.glb",
         type: AssetType.GLTF
       },
       {
@@ -121,46 +129,64 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
 
       const meshRenderers = [];
       const pbrMaterials = [];
-      function instantiateModel(instantiateCount) {
-        let childs = root.children.length;
-        if (childs < instantiateCount) {
-          const baseTextureOrNull = params.baseTexture ? baseTexture : null;
-          const specularTextureOrNull = params.specularTexture ? specularTexture : null;
-          const displacementTextureOrNull = params.displacementTexture ? displacementTexture : null;
-          const normalTextureOrNull = params.normalTexture ? normalTexture : null;
-          const emissiveTextureOrNull = params.emissiveTexture ? emissiveTexture : null;
-          const aoTextureOrNull = params.aoTexture ? aoTexture : null;
-          const clearCoatTextureOrNull = params.clearCoatTexture ? baseTexture : null;
-          const clearCoatRoughnessTextureOrNull = params.clearCoatTexture ? clearCoatRoughnessTexture : null;
-          const clearCoatNormalTextureOrNull = params.clearCoatNormalTexture ? clearCoatNormalTexture : null;
-          for (; childs < instantiateCount; ++childs) {
-            const entity = popCat.clone();
-            root.addChild(entity);
-            const x = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
-            const z = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
-            const transform = entity.transform;
-            transform.setPosition(x, 0, -z);
-            transform.setRotation(-90, Math.random() * 360, 0);
+      const unlitMaterials = [];
 
-            entity.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
-            const pbrMat = createPBRMat(engine, baseTextureOrNull, specularTextureOrNull, displacementTextureOrNull, normalTextureOrNull, emissiveTextureOrNull, aoTextureOrNull, clearCoatTextureOrNull, clearCoatRoughnessTextureOrNull, clearCoatNormalTextureOrNull);
-            meshRenderers.forEach((mr) => {
-              mr.setMaterial(pbrMat);
-            });
-            pbrMaterials.push(pbrMat);
-          }
-          meshRenderers.splice(0, meshRenderers.length);
-        } else {
-          const deleteCount = childs - instantiateCount;
-          for (; childs > instantiateCount; childs--) {
-            root.children[childs-1].destroy();
-          }
-          pbrMaterials.splice(pbrMaterials.length - deleteCount, deleteCount);
+      function instantiateModelWithUnlitMaterial(instantiateCount) {
+        const baseTextureOrNull = params.baseTexture ? baseTexture : null;
+        for (let i = 0; i < instantiateCount; ++i) {
+          const entity = popCat.clone();
+          root.addChild(entity);
+          const x = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+          const z = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+          const transform = entity.transform;
+          transform.setPosition(x, 0, -z);
+          transform.setRotation(-90, Math.random() * 360, 0);
+
+          entity.getComponent(Animator).play("Animation");
+
+          entity.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
+          const unlitMat = createUnlitMat(engine, baseTextureOrNull);
+          meshRenderers.forEach((mr) => {
+            mr.setMaterial(unlitMat);
+          });
+          unlitMaterials.push(unlitMat);
         }
+        meshRenderers.splice(0, meshRenderers.length);
+      }
+
+      function instantiateModelWithPBRMaterial(instantiateCount) {
+        const baseTextureOrNull = params.baseTexture ? baseTexture : null;
+        const specularTextureOrNull = params.specularTexture ? specularTexture : null;
+        const displacementTextureOrNull = params.displacementTexture ? displacementTexture : null;
+        const normalTextureOrNull = params.normalTexture ? normalTexture : null;
+        const emissiveTextureOrNull = params.emissiveTexture ? emissiveTexture : null;
+        const aoTextureOrNull = params.aoTexture ? aoTexture : null;
+        const clearCoatTextureOrNull = params.clearCoatTexture ? baseTexture : null;
+        const clearCoatRoughnessTextureOrNull = params.clearCoatTexture ? clearCoatRoughnessTexture : null;
+        const clearCoatNormalTextureOrNull = params.clearCoatNormalTexture ? clearCoatNormalTexture : null;
+        for (let i = 0; i < instantiateCount; ++i) {
+          const entity = popCat.clone();
+          root.addChild(entity);
+          const x = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+          const z = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+          const transform = entity.transform;
+          transform.setPosition(x, 0, -z);
+          transform.setRotation(-90, Math.random() * 360, 0);
+
+          entity.getComponent(Animator).play("Animation");
+
+          entity.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
+          const pbrMat = createPBRMat(engine, baseTextureOrNull, specularTextureOrNull, displacementTextureOrNull, normalTextureOrNull, emissiveTextureOrNull, aoTextureOrNull, clearCoatTextureOrNull, clearCoatRoughnessTextureOrNull, clearCoatNormalTextureOrNull);
+          meshRenderers.forEach((mr) => {
+            mr.setMaterial(pbrMat);
+          });
+          pbrMaterials.push(pbrMat);
+        }
+        meshRenderers.splice(0, meshRenderers.length);
       }
 
       const params = {
-        instantiated: 100,
+        material: "Unlit",
         baseTexture: true,
         specularTexture: false,
         displacementTexture: false,
@@ -172,54 +198,72 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
         clearCoatNormalTexture: false
       };
       const gui = new dat.GUI();
-      gui.add(params, "instantiated", 0, 500, 1).onChange(instantiateModel);
-      gui.add(params, "baseTexture").onChange(() => {
+      gui.add(params, "material", ["Unlit", "PBR"]).onChange(() => {
+        unlitMaterials.splice(0, unlitMaterials.length);
+        pbrMaterials.splice(0, pbrMaterials.length);
+        root.clearChildren();
+
+        if (params.material === "Unlit") {
+          instantiateModelWithUnlitMaterial(1000);
+        } else {
+          instantiateModelWithPBRMaterial(1000);
+        }
+      });
+      const unlitFolder = gui.addFolder("Unlit Material");
+      unlitFolder.add(params, "baseTexture").onChange(() => {
+        unlitMaterials.forEach((mat: UnlitMaterial) => {
+          mat.baseTexture = params.baseTexture ? baseTexture : null;
+        });
+      });
+
+      const pbrFolder = gui.addFolder("PBR Material");
+      pbrFolder.add(params, "baseTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.baseTexture = params.baseTexture ? baseTexture : null;
         });
       });
-      gui.add(params, "specularTexture").onChange(() => {
+      pbrFolder.add(params, "specularTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.roughnessMetallicTexture = params.specularTexture ? specularTexture : null;
         });
       });
-      gui.add(params, "displacementTexture").onChange(() => {
+      pbrFolder.add(params, "displacementTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.anisotropyTexture = params.displacementTexture ? displacementTexture : null;
         });
       });
-      gui.add(params, "normalTexture").onChange(() => {
+      pbrFolder.add(params, "normalTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.normalTexture = params.normalTexture ? normalTexture : null;
         });
       });
-      gui.add(params, "aoTexture").onChange(() => {
+      pbrFolder.add(params, "aoTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.occlusionTexture = params.aoTexture ? aoTexture : null;
         });
       });
-      gui.add(params, "emissiveTexture").onChange(() => {
+      pbrFolder.add(params, "emissiveTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.emissiveTexture = params.emissiveTexture ? emissiveTexture : null;
         });
       });
-      gui.add(params, "clearCoatTexture").onChange(() => {
+      pbrFolder.add(params, "clearCoatTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.clearCoatTexture = params.clearCoatTexture ? baseTexture : null;
         });
       });
-      gui.add(params, "clearCoatRoughnessTexture").onChange(() => {
+      pbrFolder.add(params, "clearCoatRoughnessTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.clearCoatRoughnessTexture = params.clearCoatRoughnessTexture ? clearCoatRoughnessTexture : null;
         });
       });
-      gui.add(params, "clearCoatNormalTexture").onChange(() => {
+      pbrFolder.add(params, "clearCoatNormalTexture").onChange(() => {
         pbrMaterials.forEach((mat: PBRMaterial) => {
           mat.clearCoatNormalTexture = params.clearCoatNormalTexture ? clearCoatNormalTexture : null;
         });
       });
 
-      instantiateModel(params.instantiated);
+      instantiateModelWithUnlitMaterial(1000);
     });
 
   engine.run();
