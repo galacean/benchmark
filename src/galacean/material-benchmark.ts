@@ -1,5 +1,5 @@
 /**
- * @title PBRMaterial
+ * @title Material
  * @category Benchmark
  */
 
