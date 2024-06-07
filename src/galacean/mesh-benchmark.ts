@@ -27,7 +27,6 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
 
   const root = scene.createRootEntity("root");
 
-  const border = 50;
   function createModel(url, instantiateCount) {
     if (root.children.length > 0) {
       const children = root.children;
@@ -42,8 +41,8 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
       root.addChild(model);
       for (let i = 0, length = instantiateCount - 1; i < length; ++i) {
         const entity = model.clone();
-        const x = Math.random() * border - border / 2;
-        const z = Math.random() * border - border / 2;
+        const x = (Math.random() * 50 - 50 / 2) * 2.5;
+        const z = (Math.random() * 50 - 50 / 2) * 2.5;
         const transform = entity.transform;
         transform.setPosition(x, 0, -z);
         transform.setRotation(-90, Math.random() * 360, 0);
