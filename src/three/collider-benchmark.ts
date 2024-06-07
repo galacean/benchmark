@@ -29,32 +29,30 @@ scriptPromise.then(() => {
 
     //
     camera = new THREE.PerspectiveCamera(
-      50,
+      45,
       window.innerWidth / window.innerHeight,
       0.1,
       100
     );
     camera.position.set(-1, 1.5, 2);
-    camera.lookAt(0, 0.5, 0);
+    camera.lookAt(0, 0, 0);
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x666666);
-
-    const hemiLight = new THREE.HemisphereLight();
-    hemiLight.intensity = 0.3;
-    scene.add(hemiLight);
+    scene.background = new THREE.Color();
+    var ambientLight = new THREE.AmbientLight(0xffffff);
+    ambientLight.color.set(new THREE.Color(1, 1, 1));
+    scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight();
-    dirLight.position.set(5, 5, 5);
-    dirLight.castShadow = true;
-    dirLight.shadow.camera.zoom = 2;
+    dirLight.position.set(-0.3, 1, 0.4);
+    dirLight.castShadow = false;
     scene.add(dirLight);
 
     const floor = new THREE.Mesh(
-      new THREE.BoxGeometry(10, 5, 10),
-      new THREE.ShadowMaterial({ color: 0x444444 })
+      new THREE.BoxGeometry(30, 1, 30),
+      new THREE.MeshStandardMaterial({ color: 0x374a4f })
     );
-    floor.position.y = -2.5;
+    floor.position.y = -0.5;
     floor.receiveShadow = false;
     scene.add(floor);
     physics.addMesh(floor);
@@ -62,45 +60,32 @@ scriptPromise.then(() => {
     // Boxes
     const geometryBox = new THREE.BoxGeometry(0.075, 0.075, 0.075);
 
-    // for (let i = 0; i < 550; i++) {
-    //   let boxes = new THREE.Mesh(
-    //     geometryBox,
-    //     new THREE.MeshLambertMaterial({ color: 0xffffff * Math.random() })
-    //   );
-    //   boxes.castShadow = false;
-    //   boxes.receiveShadow = false;
-    //   scene.add(boxes);
-
-    //   boxes.position.set(
-    //     Math.random() - 0.5,
-    //     Math.random() * 2,
-    //     Math.random() - 0.5
-    //   );
-    //   physics.addMesh(boxes, 1);
-    // }
-
     var boxCount = 0;
     setInterval(() => {
-      if (boxCount > 700) return;
+      if (boxCount > 1000) return;
 
+      addBox(
+        new THREE.Vector3(
+          Math.random() - 0.5,
+          Math.random() * 2 + 2.5,
+          Math.random() - 0.5
+        )
+      );
+      boxCount++;
+    }, 16);
+
+    function addBox(position) {
       let boxes = new THREE.Mesh(
         geometryBox,
-        new THREE.MeshLambertMaterial({ color: 0xffffff * Math.random() })
+        new THREE.MeshStandardMaterial({ color: 0xffffff * Math.random() })
       );
       boxes.castShadow = false;
       boxes.receiveShadow = false;
       scene.add(boxes);
 
-      boxes.position.set(
-        Math.random() - 0.5,
-        Math.random() * 2,
-        Math.random() - 0.5
-      );
+      boxes.position.set(position.x, position.y, position.z);
       physics.addMesh(boxes, 1);
-      boxCount++;
-    }, 16);
-
-    //
+    }
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
     canvas.width = canvas.clientWidth * window.devicePixelRatio;
     canvas.height = canvas.clientHeight * window.devicePixelRatio;

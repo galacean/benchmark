@@ -4,17 +4,22 @@
   "private": true,
   "packageManager": "pnpm@8.10.5",
   "dependencies": {
+    "@babel/runtime": "^7.24.5",
     "@babylonjs/core": "^7.6.0",
+    "@babylonjs/gui": "^7.8.0",
+    "@babylonjs/havok": "^1.3.4",
     "@babylonjs/loaders": "^7.6.0",
-    "@galacean/engine": "^1.2.0-beta",
-    "@galacean/engine-physics-lite": "^1.2.0-beta",
-    "@galacean/engine-physics-physx": "^1.2.0-beta",
+    "@galacean/engine": "^1.2.0-beta.5",
+    "@galacean/engine-physics-lite": "^1.2.0-beta.5",
+    "@galacean/engine-physics-physx": "^1.2.0-beta.5",
     "@galacean/engine-toolkit": "^1.2.0-beta",
     "@types/three": "^0.164.0",
     "babylonjs": "^7.6.0",
     "dat.gui": "^0.7.9",
     "stats.js": "^0.17.0",
-    "three": "^0.164.1"
+    "three": "^0.164.1",
+    "three-nebula": "^10.0.3",
+    "three-spritetext": "^1.8.2"
   },
   "scripts": {
     "dev": "vite serve template --config template/vite.config.ts",
@@ -43,6 +48,6 @@
     "fs-extra": "^10.1.0",
     "sass": "^1.55.0",
     "typescript": "^4.8.3",
-    "vite": "^3.1.6"
+    "vite": "^5.2.11"
   }
 }
