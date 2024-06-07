@@ -16,6 +16,35 @@ import {
 } from "@galacean/engine";
 import * as dat from "dat.gui";
 
+function createPBRMat(engine: WebGLEngine, baseTexture, specularTexture, displacementTexture, normalTexture, emissiveTexture, aoTexture, clearCoatTexture, clearCoatRoughnessTexture, clearCoatNormalTexture): PBRMaterial {
+  const pbrMat = new PBRMaterial(engine);
+  pbrMat.baseTexture = baseTexture;
+  pbrMat.ior = 1.5;
+  pbrMat.metallic = 1;
+
+  pbrMat.roughness = 0.7;
+  pbrMat.roughnessMetallicTexture = specularTexture;
+
+  pbrMat.anisotropy = 0.2;
+  pbrMat.anisotropyRotation = 50;
+  pbrMat.anisotropyTexture = displacementTexture;
+
+  pbrMat.normalTexture = normalTexture;
+  pbrMat.normalTextureIntensity = 0.5;
+
+  pbrMat.emissiveTexture = emissiveTexture;
+
+  pbrMat.occlusionTexture = aoTexture;
+  pbrMat.occlusionTextureIntensity = 1.6;
+
+  pbrMat.clearCoat = 0.5;
+  pbrMat.clearCoatTexture = clearCoatTexture;
+  pbrMat.clearCoatRoughness = 0.5;
+  pbrMat.clearCoatRoughnessTexture = clearCoatRoughnessTexture;
+  pbrMat.clearCoatNormalTexture = clearCoatNormalTexture;
+  return pbrMat;
+}
+
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.canvas.resizeByClientSize();
 
@@ -25,7 +54,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
 
   // Add camera.
   const cameraEntity = scene.createRootEntity("Camera");
-  cameraEntity.transform.setPosition(8 * 1.7, 6 * 1.7, 10 * 1.7);
+  cameraEntity.transform.setPosition(0, 5, 10);
   cameraEntity.transform.lookAt(new Vector3(0, 0, 0));
   const camera = cameraEntity.addComponent(Camera);
   camera.enableFrustumCulling = false;
@@ -75,73 +104,122 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       }
     ])
     .then((resources) => {
-      const gltf = <GLTFResource>resources[0];
-      const baseTexture = <Texture2D>resources[1];
-      const displacementTexture = <Texture2D>resources[2];
-      const aoTexture = <Texture2D>resources[3];
-      const normalTexture = <Texture2D>resources[4];
-      const specularTexture = <Texture2D>resources[5];
-      const emissiveTexture = <Texture2D>resources[6];
-      const clearCoatRoughnessTexture =  <Texture2D>resources[7];
-      const clearCoatNormalTexture = <Texture2D>resources[8];
-
-      const pbrMat = new PBRMaterial(engine);
-      pbrMat.baseTexture = baseTexture;
-      pbrMat.ior = 1.5;
-      pbrMat.metallic = 1;
-      pbrMat.roughness = 0.7;
-      pbrMat.roughnessMetallicTexture = specularTexture;
-      pbrMat.anisotropy = 0.2;
-      pbrMat.anisotropyRotation = 50;
-      pbrMat.anisotropyTexture = displacementTexture;
-      pbrMat.normalTexture = normalTexture;
-      pbrMat.normalTextureIntensity = 0.5;
-      pbrMat.emissiveTexture = emissiveTexture;
-      pbrMat.occlusionTexture = aoTexture;
-      pbrMat.occlusionTextureIntensity = 1.6;
-      pbrMat.clearCoat = 0.5;
-      pbrMat.clearCoatTexture = baseTexture;
-      pbrMat.clearCoatRoughness = 0.5;
-      pbrMat.clearCoatRoughnessTexture = clearCoatRoughnessTexture;
-      pbrMat.clearCoatNormalTexture = clearCoatNormalTexture;
+      const gltf = resources[0] as GLTFResource;
+      const baseTexture = resources[1] as Texture2D;
+      const displacementTexture = resources[2] as Texture2D;
+      const aoTexture = resources[3] as Texture2D;
+      const normalTexture = resources[4] as Texture2D;
+      const specularTexture = resources[5] as Texture2D;
+      const emissiveTexture = resources[6] as Texture2D;
+      const clearCoatRoughnessTexture =  resources[7] as Texture2D;
+      const clearCoatNormalTexture = resources[8] as Texture2D;
 
       const popCat = gltf.instantiateSceneRoot();
       const transform = popCat.transform;
       transform.setPosition(0, 0, 0);
       transform.scale.scale(0.025);
 
-      // Replace material to PBRMaterial.
       const meshRenderers = [];
-      popCat.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
-      meshRenderers.forEach((mr) => {
-        mr.setMaterial(pbrMat);
-      });
-
-      const border = 7.5;
+      const pbrMaterials = [];
       function instantiateModel(instantiateCount) {
         let childs = root.children.length;
         if (childs < instantiateCount) {
+          const baseTextureOrNull = params.baseTexture ? baseTexture : null;
+          const specularTextureOrNull = params.specularTexture ? specularTexture : null;
+          const displacementTextureOrNull = params.displacementTexture ? displacementTexture : null;
+          const normalTextureOrNull = params.normalTexture ? normalTexture : null;
+          const emissiveTextureOrNull = params.emissiveTexture ? emissiveTexture : null;
+          const aoTextureOrNull = params.aoTexture ? aoTexture : null;
+          const clearCoatTextureOrNull = params.clearCoatTexture ? baseTexture : null;
+          const clearCoatRoughnessTextureOrNull = params.clearCoatTexture ? clearCoatRoughnessTexture : null;
+          const clearCoatNormalTextureOrNull = params.clearCoatNormalTexture ? clearCoatNormalTexture : null;
           for (; childs < instantiateCount; ++childs) {
             const entity = popCat.clone();
             root.addChild(entity);
-            const x = Math.random() * border - border / 2;
-            const z = Math.random() * border - border / 2;
+            const x = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+            const z = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
             const transform = entity.transform;
             transform.setPosition(x, 0, -z);
             transform.setRotation(-90, Math.random() * 360, 0);
+
+            entity.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
+            const pbrMat = createPBRMat(engine, baseTextureOrNull, specularTextureOrNull, displacementTextureOrNull, normalTextureOrNull, emissiveTextureOrNull, aoTextureOrNull, clearCoatTextureOrNull, clearCoatRoughnessTextureOrNull, clearCoatNormalTextureOrNull);
+            meshRenderers.forEach((mr) => {
+              mr.setMaterial(pbrMat);
+            });
+            pbrMaterials.push(pbrMat);
           }
+          meshRenderers.splice(0, meshRenderers.length);
         } else {
+          const deleteCount = childs - instantiateCount;
           for (; childs > instantiateCount; childs--) {
             root.children[childs-1].destroy();
           }
+          pbrMaterials.splice(pbrMaterials.length - deleteCount, deleteCount);
         }
       }
 
       const params = {
-        instantiated: 0
+        instantiated: 100,
+        baseTexture: true,
+        specularTexture: false,
+        displacementTexture: false,
+        normalTexture: false,
+        emissiveTexture: false,
+        aoTexture: false,
+        clearCoatTexture: false,
+        clearCoatRoughnessTexture: false,
+        clearCoatNormalTexture: false
       };
       const gui = new dat.GUI();
-      gui.add(params, "instantiated", 0, 500).onChange(instantiateModel);
+      gui.add(params, "instantiated", 0, 500, 1).onChange(instantiateModel);
+      gui.add(params, "baseTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.baseTexture = params.baseTexture ? baseTexture : null;
+        });
+      });
+      gui.add(params, "specularTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.roughnessMetallicTexture = params.specularTexture ? specularTexture : null;
+        });
+      });
+      gui.add(params, "displacementTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.anisotropyTexture = params.displacementTexture ? displacementTexture : null;
+        });
+      });
+      gui.add(params, "normalTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.normalTexture = params.normalTexture ? normalTexture : null;
+        });
+      });
+      gui.add(params, "aoTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.occlusionTexture = params.aoTexture ? aoTexture : null;
+        });
+      });
+      gui.add(params, "emissiveTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.emissiveTexture = params.emissiveTexture ? emissiveTexture : null;
+        });
+      });
+      gui.add(params, "clearCoatTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.clearCoatTexture = params.clearCoatTexture ? baseTexture : null;
+        });
+      });
+      gui.add(params, "clearCoatRoughnessTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.clearCoatRoughnessTexture = params.clearCoatRoughnessTexture ? clearCoatRoughnessTexture : null;
+        });
+      });
+      gui.add(params, "clearCoatNormalTexture").onChange(() => {
+        pbrMaterials.forEach((mat: PBRMaterial) => {
+          mat.clearCoatNormalTexture = params.clearCoatNormalTexture ? clearCoatNormalTexture : null;
+        });
+      });
+
+      instantiateModel(params.instantiated);
     });
 
   engine.run();

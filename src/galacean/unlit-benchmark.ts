@@ -16,6 +16,12 @@ import {
 } from "@galacean/engine";
 import * as dat from 'dat.gui';
 
+function createUnlitMat(engine: WebGLEngine, baseTexture): UnlitMaterial {
+  const unlitMat = new UnlitMaterial(engine);
+  unlitMat.baseTexture = baseTexture;
+  return unlitMat;
+}
+
 WebGLEngine.create({ canvas: "canvas" }).then(engine => {
   engine.canvas.resizeByClientSize();
 
@@ -25,7 +31,7 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
 
   // Add camera.
   const cameraEntity = scene.createRootEntity("Camera");
-  cameraEntity.transform.setPosition(8 * 1.7, 6 * 1.7, 10 * 1.7);
+  cameraEntity.transform.setPosition(0, 5, 10);
   cameraEntity.transform.lookAt(new Vector3(0, 0, 0));
   const camera = cameraEntity.addComponent(Camera);
   camera.enableFrustumCulling = false;
@@ -47,35 +53,32 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       },
     ])
     .then((resources) => {
-      const gltf = <GLTFResource>resources[0];
-
-      const unlitMat = new UnlitMaterial(engine);
-      unlitMat.baseTexture = <Texture2D>resources[1];
+      const gltf = resources[0] as GLTFResource;
+      const baseTexture = resources[1] as Texture2D;
 
       const popCat = gltf.instantiateSceneRoot();
       const transform = popCat.transform;
       transform.setPosition(0, 0, 0);
       transform.scale.scale(0.025);
 
-      // Replace material to UnlitMaterial.
       const meshRenderers = [];
-      popCat.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
-      meshRenderers.forEach((mr) => {
-        mr.setMaterial(unlitMat);
-      });
-
-      const border = 7.5;
       function instantiateModel(instantiateCount) {
         let childs = root.children.length;
         if (childs < instantiateCount) {
           for (; childs < instantiateCount; ++childs) {
             const entity = popCat.clone();
             root.addChild(entity);
-            const x = Math.random() * border - border / 2;
-            const z = Math.random() * border - border / 2;
+            const x = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
+            const z = (Math.random() * 7.5 - 7.5 / 2) * 2.5;
             const transform = entity.transform;
-            transform.setPosition(x, 0, -z);
+            transform.setPosition(x * 2.5, 0, -z * 2.5);
             transform.setRotation(-90, Math.random() * 360, 0);
+
+            entity.getComponentsIncludeChildren(MeshRenderer, meshRenderers);
+            const matClone = createUnlitMat(engine, baseTexture);
+            meshRenderers.forEach((mr) => {
+              mr.setMaterial(matClone);
+            });
           }
         } else {
           for (; childs > instantiateCount; childs--) {
@@ -85,10 +88,12 @@ WebGLEngine.create({ canvas: "canvas" }).then(engine => {
       }
 
       const params = {
-        instantiated: 0
+        instantiated: 100
       };
       const gui = new dat.GUI();
       gui.add(params, "instantiated", 0, 500).onChange(instantiateModel);
+
+      instantiateModel(params.instantiated);
     });
 
   engine.run();
