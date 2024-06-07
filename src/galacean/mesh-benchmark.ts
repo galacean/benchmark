@@ -7,8 +7,10 @@ import {
   Camera,
   WebGLEngine,
   GLTFResource,
+  Vector3,
 } from '@galacean/engine';
 import * as dat from "dat.gui";
+import { OrbitControl } from '@galacean/engine-toolkit';
 
 WebGLEngine.create({canvas: "canvas"}).then((engine) => {
   engine.canvas.resizeByClientSize();
@@ -17,8 +19,10 @@ WebGLEngine.create({canvas: "canvas"}).then((engine) => {
 
   // Create camera entity.
   const cameraEntity = scene.createRootEntity("Camera");
-  cameraEntity.transform.setPosition(0, 0, 10);
+  cameraEntity.transform.setPosition(0, 5, 10);
+  cameraEntity.transform.lookAt(new Vector3(0, 0, 0));
   const camera = cameraEntity.addComponent(Camera);
+  cameraEntity.addComponent(OrbitControl);
   camera.enableFrustumCulling = false;
 
   const root = scene.createRootEntity("root");
