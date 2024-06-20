@@ -58,7 +58,7 @@ WebGLEngine.create({
           sr.sprite = sprite;
           sr && (sr.priority = index++);
           const transform = entity.transform;
-          transform.setScale(0.2, 0.2, 0.2);
+          transform.setScale(0.3, 0.3, 0.3);
           transform.setPosition(
             (j - centerX) * offsetX,
             (i - centerY) * offsetY,
