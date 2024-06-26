@@ -8,6 +8,7 @@ import {
   Camera,
   Script,
   Sprite,
+  SpriteAtlas,
   SpriteRenderer,
   Texture2D,
   WebGLEngine,
@@ -35,12 +36,13 @@ WebGLEngine.create({
   camera.orthographicSize = (engine.canvas.height * 0.5) / 100;
 
   engine.resourceManager
-    .load<Texture2D>({
-      url: "https://mdn.alipayobjects.com/huamei_w6ifet/afts/img/A*YwyMRq8_O-4AAAAAAAAAAAAADjCHAQ/original",
-      type: AssetType.Texture2D,
+    .load<SpriteAtlas>({
+      url: "https://mdn.alipayobjects.com/oasis_be/afts/file/A*s_FUSawb0sgAAAAAAAAAAAAADkp5AQ/SpriteAtlas.json",
+      type: AssetType.SpriteAtlas,
     })
-    .then((texture: Texture2D) => {
-      const sprite = new Sprite(engine, texture);
+    .then((atlas: SpriteAtlas) => {
+      const sprite1 = atlas.getSprite("/tex1-spr.png");
+      const sprite2 = atlas.getSprite("/tex2-spr.png");
 
       const col = 88;
       const row = 90;
@@ -55,7 +57,7 @@ WebGLEngine.create({
           const entity = rootEntity.createChild(`sprite-${i}`);
           const sr = entity.addComponent(SpriteRenderer);
           entity.addComponent(Rotate);
-          sr.sprite = sprite;
+          sr.sprite = i % 2 === 0 ? sprite1 : sprite2;
           sr && (sr.priority = index++);
           const transform = entity.transform;
           const scale = 0.075;
