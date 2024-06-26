@@ -19,9 +19,9 @@ app
       src: "https://mdn.alipayobjects.com/huamei_w6ifet/afts/img/A*YwyMRq8_O-4AAAAAAAAAAAAADjCHAQ/original",
       loadParser: "loadTextures",
     }).then((texture) => {
-      const col = 22;
+      const col = 88;
       const row = 90;
-      const offsetX = 17;
+      const offsetX = 4.25;
       const offsetY = 10;
       // 中心点所在行列
       const centerX = col * 0.5;
@@ -35,7 +35,7 @@ app
         for (let j = 0; j < col; ++j) {
           const sprite = new PIXI.Sprite(texture);
           app.stage.addChild(sprite);
-          sprite.scale = 0.18;
+          sprite.scale = 0.045;
           sprite.anchor.set(0.5, 0.5);
           sprite.x = halfWidth + (j - centerX) * offsetX + 10;
           sprite.y = halfHeight + (i - centerY) * offsetY + 10;

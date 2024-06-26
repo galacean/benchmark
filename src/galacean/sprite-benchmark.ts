@@ -14,7 +14,7 @@ import {
 } from "@galacean/engine";
 
 class Rotate extends Script {
-  speed = 30;
+  speed = 60;
   onUpdate(dt: number): void {
     this.entity.transform.rotation.z += this.speed * dt;
   }
@@ -42,9 +42,9 @@ WebGLEngine.create({
     .then((texture: Texture2D) => {
       const sprite = new Sprite(engine, texture);
 
-      const col = 22;
+      const col = 88;
       const row = 90;
-      const offsetX = 0.38;
+      const offsetX = 0.1;
       const offsetY = 0.2;
       // 中心点所在行列
       const centerX = col * 0.5;
@@ -58,7 +58,8 @@ WebGLEngine.create({
           sr.sprite = sprite;
           sr && (sr.priority = index++);
           const transform = entity.transform;
-          transform.setScale(0.3, 0.3, 0.3);
+          const scale = 0.075;
+          transform.setScale(scale, scale, scale);
           transform.setPosition(
             (j - centerX) * offsetX,
             (i - centerY) * offsetY,
