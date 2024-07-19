@@ -17,6 +17,7 @@
     "@types/three": "^0.164.0",
     "babylonjs": "^7.6.0",
     "dat.gui": "^0.7.9",
+    "pixi.js": "^8.1.8",
     "stats.js": "^0.17.0",
     "three": "^0.164.1",
     "three-nebula": "^10.0.3",

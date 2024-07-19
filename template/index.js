@@ -4,7 +4,7 @@ const searchBarDOM = document.getElementById("searchBar");
 const iframe = document.getElementById("iframe");
 const items = []; // itemDOM,label
 
-const platforms = ["galacean", "three", "babylon"];
+const platforms = ["galacean", "three", "babylon", "pixi"];
 
 let url = new URL(window.location.href);
 const platform = url.searchParams.get("platform") ?? "galacean";
@@ -13,14 +13,20 @@ platforms.splice(platforms.indexOf(platform), 1);
 
 const button1 = document.getElementById("button1");
 const button2 = document.getElementById("button2");
+const button3 = document.getElementById("button3");
 button1.innerText = platforms[0];
 button2.innerText = platforms[1];
+button3.innerText = platforms[2];
 button1.addEventListener("click", () => {
   url.searchParams.set("platform", platforms[0]);
   window.location.href = url.toString();
 });
 button2.addEventListener("click", () => {
   url.searchParams.set("platform", platforms[1]);
+  window.location.href = url.toString();
+});
+button3.addEventListener("click", () => {
+  url.searchParams.set("platform", platforms[2]);
   window.location.href = url.toString();
 });
 
@@ -74,7 +80,7 @@ import(`./mpa/${platform}/.demoList.json`).then(({ default: demoList }) => {
   }
 
   function clickItem(itemDOM) {
-    console.log('on hash change')
+    console.log("on hash change");
     window.location.hash = `#mpa/${itemDOM.title}`;
     url = new URL(window.location.href);
   }
