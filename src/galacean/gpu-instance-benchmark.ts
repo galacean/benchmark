@@ -5,6 +5,7 @@
 
 import {
   BlendFactor,
+  BlendOperation,
   Buffer,
   BufferBindFlag,
   BufferMesh,
@@ -138,6 +139,77 @@ const galaxyShader = `
   }
 `;
 
+const vertexShader = `
+  uniform mat4 renderer_LocalMat;
+  uniform mat4 renderer_MVPMat;
+  uniform vec3 camera_Position;
+  uniform float u_time;
+  uniform float u_size;
+
+  attribute vec3 POSITION;
+  attribute vec2 TEXCOORD_0;
+  attribute float f_phi;
+  attribute float f_theta;
+  attribute float f_radiusRatio;
+  attribute float f_radius;
+  attribute float f_offsetRadius;
+  attribute float f_branchAngle;
+  attribute float f_size;
+
+  varying vec2 uv;
+  varying float v_radiusRatio;
+
+  vec3 sphericalToCartesian(float phi, float theta) {
+    float sinPhi = sin(phi);
+    return vec3(sinPhi * sin(theta), cos(phi), sinPhi * cos(theta));
+  }
+
+  void main() {
+    // billboad
+    vec3 vertToCam = -(renderer_LocalMat * vec4(camera_Position, 1.0)).xyz;
+    vertToCam = normalize(vertToCam);
+    vec3 up = vec3(0.0, 1.0, 0.0);
+    if (abs(vertToCam.y) > 0.999) {
+      up.y = 0.0;
+      up.z = 1.0;
+    }
+    vec3 right = normalize(cross(up, vertToCam));
+    up = normalize(cross(right, vertToCam));
+
+    vec3 billboardPos = POSITION * f_size * u_size;
+    billboardPos = billboardPos.x * right + billboardPos.y * up + billboardPos.z * vertToCam;
+
+    // Calculate instance position.
+    float angle = f_branchAngle + u_time * (1.0 - f_radiusRatio);
+    vec3 spherePosition = vec3(cos(angle), 0.0, sin(angle)) * f_radius;
+    vec3 randomOffset = sphericalToCartesian(f_phi, f_theta) * f_offsetRadius;
+
+    billboardPos = billboardPos + spherePosition + randomOffset;
+    gl_Position = renderer_MVPMat * vec4(billboardPos, 1.0);
+
+    uv = TEXCOORD_0;
+    v_radiusRatio = f_radiusRatio;
+  }
+`;
+
+const fragmentShader = `
+  uniform vec4 colorInside;
+  uniform vec4 colorOutside;
+
+  varying vec2 uv;
+  varying float v_radiusRatio;
+
+  void main() {
+    vec4 colorFinal = mix(colorInside, colorOutside, 1.0 - pow(1.0 - v_radiusRatio, 2.0));
+    float alpha = (0.1 / (length(uv - vec2(0.5)))) - 0.2;
+    if (alpha >= 0.0) {
+      gl_FragColor = vec4(colorFinal.rgb, alpha);
+    } else {
+      discard;
+    }
+  }
+`;
+
 class GalaxyParticleSimulator extends Script {
   material: Material;
 
@@ -172,7 +244,8 @@ export default class Main {
   }
 
   createGalaxy(root: Entity) {
-    Shader.create(galaxyShader);
+    // Shader.create(galaxyShader);
+    Shader.create('Galaxy', vertexShader, fragmentShader);
 
     const galaxy = root.createChild('Galaxy-Geometry');
     const mr = galaxy.addComponent(MeshRenderer);
@@ -182,6 +255,19 @@ export default class Main {
     galaxyMat.shaderData.setVector4("colorInside", new Vector4(255 / 255, 165 / 255, 117 / 255));
     galaxyMat.shaderData.setVector4("colorOutside", new Vector4(49 / 255, 21 / 255, 153 / 255));
     galaxyMat.shaderData.setFloat("u_size", 0.08);
+
+    const { blendState, depthState, rasterState } = galaxyMat.renderState;
+    const targetBlendState = blendState.targetBlendState;
+    targetBlendState.enabled = true;
+    targetBlendState.colorBlendOperation = BlendOperation.Add;
+    targetBlendState.alphaBlendOperation = BlendOperation.Add;
+    targetBlendState.sourceColorBlendFactor = BlendFactor.SourceAlpha;
+    targetBlendState.destinationColorBlendFactor = BlendFactor.One;
+    targetBlendState.sourceAlphaBlendFactor = BlendFactor.SourceAlpha;
+    targetBlendState.destinationAlphaBlendFactor = BlendFactor.One;
+    depthState.enabled = true;
+    depthState.writeEnabled = false;
+    rasterState.cullMode = CullMode.Back;
 
     const gps = galaxy.addComponent(GalaxyParticleSimulator);
     gps.material = galaxyMat;
@@ -194,29 +280,6 @@ export default class Main {
     const PI = 3.1415926535;
     const PI2 = 6.28318530718;
     const branches = 3;
-
-    // const vertices = new Float32Array([
-    //   // Plane
-    //   -1, 1, 0, 0, 0, 1, 0, 0,
-    //   0, 1, 0, 0, 0, 1, 0.5, 0,
-    //   1, 1, 0, 0, 0, 1, 1, 0,
-    //   -1, 0, 0, 0, 0, 1, 0, 0.5,
-    //   0, 0, 0, 0, 0, 1, 0.5, 0.5,
-    //   1, 0, 0, 0, 0, 1, 1, 0.5,
-    //   -1, -1, 0, 0, 0, 1, 0, 1,
-    //   0, -1, 0, 0, 0, 1, 0.5, 1,
-    //   1, -1, 0, 0, 0, 1, 1, 1,
-    // ]);
-    // const indices = new Uint16Array([
-    //   // Face1
-    //   0, 3, 1, 1, 3, 4,
-    //   // Face2
-    //   1, 4, 2, 2, 4, 5,
-    //   // Face3
-    //   3, 6, 4, 4, 6, 7,
-    //   // Face4
-    //   4, 7, 5, 5, 7, 8,
-    // ]);
 
     const [ vertices, indices ] = this.setPlaneData(1, 1, 1, 1);
 
