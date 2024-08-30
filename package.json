@@ -13,6 +13,7 @@
     "@galacean/engine-physics-lite": "^1.2.0-beta.5",
     "@galacean/engine-physics-physx": "^1.2.0-beta.5",
     "@galacean/engine-toolkit": "^1.2.0-beta",
+    "@galacean/engine-spine": "1.1.0-beta.23",
     "@types/three": "^0.164.0",
     "babylonjs": "^7.6.0",
     "dat.gui": "^0.7.9",
