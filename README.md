@@ -1,8 +1,3 @@
 # Benchmark
 
-Some benchmark cases:
-
-- Basic
-- Animation
-- Collider
-- Particle
+See: https://galacean.antgroup.com/engine/en/docs/basics/benchmark/
