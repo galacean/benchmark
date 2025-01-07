@@ -5,7 +5,6 @@
 
 import * as THREE from "three";
 import * as spine from "@esotericsoftware/spine-threejs";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 let scene, camera, renderer;
 let geometry, material, mesh, skeletonMesh;
@@ -33,7 +32,6 @@ function init() {
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer({ canvas });
     renderer.setSize(width, height);
-    controls = new OrbitControls(camera, canvas);
 
     assetManager = new spine.AssetManager(baseUrl);
     assetManager.loadText(skeletonFile);
@@ -69,8 +67,6 @@ function render() {
     lastFrameTime = now;
 
     resize();
-
-    controls.update();
 
     for (let i = 0; i < cloneGroup.length; i ++) {
       cloneGroup[i].update(delta);
